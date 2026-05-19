@@ -20,5 +20,29 @@ public class Malattia {
     public void setAmministratore(Amministratore amministratoreAssegnato){
         this.amministratoreAssegnato = amministratoreAssegnato;
     }
+
+    public String getIdMalattia() {
+        return idMalattia;
+    }
+
+    public LocalDateTime getDataInizio() {
+        return dataInizio;
+    }
+
+    public LocalDateTime getDataFine() {
+        return dataFine;
+    }
+
+    public Amministratore getAmministratoreAssegnato() {
+        return amministratoreAssegnato;
+    }
+
+    public Medico getMedicoAssegnato() {
+        return medicoAssegnato;
+    }
+
+    public void setDataFine(LocalDateTime dataFine) {
+        this.dataFine = dataFine;
+    }
 }
 

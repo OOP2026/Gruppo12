@@ -19,4 +19,15 @@ public class Amministratore extends Utente {
     public void addRicovero(Ricovero nuovoRicovero) { this.listaRicoveri.add(nuovoRicovero);}
     public void addMalattia(Malattia nuovaMalattia) { this.listaMalattie.add(nuovaMalattia);}
 
+    public String getMatricolaAmministratore() {
+        return matricolaAmministratore;
+    }
+
+    public List<Ricovero> getListaRicoveri() {
+        return listaRicoveri;
+    }
+
+    public List<Malattia> getListaMalattie() {
+        return listaMalattie;
+    }
 }

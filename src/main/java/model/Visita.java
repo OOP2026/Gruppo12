@@ -9,4 +9,12 @@ public class Visita extends Prestazione {
         super(numPrestazione, dataInizio, dataFine, esito);
         this.tipoVisita = tipoVisita;
     }
+
+    public String getTipoVisita() {
+        return tipoVisita;
+    }
+
+    public void setTipoVisita(String tipoVisita) {
+        this.tipoVisita = tipoVisita;
+    }
 }

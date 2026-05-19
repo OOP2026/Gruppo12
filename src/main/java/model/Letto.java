@@ -25,10 +25,6 @@ public class Letto {
         return matricolaLetto;
     }
 
-    public void setMatricolaLetto(String matricolaLetto) {
-        this.matricolaLetto = matricolaLetto;
-    }
-
     public void setStanza(Stanza stanza) {
         this.stanza = stanza;
     }

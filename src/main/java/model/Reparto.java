@@ -16,4 +16,16 @@ public class Reparto {
 
     public void addMedico(Medico medico) { this.medici.add(medico);}
     public void addStanza(Stanza stanza) { this.stanze.add(stanza);}
+
+    public String getNomeReparto() {
+        return nomeReparto;
+    }
+
+    public List<Medico> getMedici() {
+        return medici;
+    }
+
+    public List<Stanza> getStanze() {
+        return stanze;
+    }
 }

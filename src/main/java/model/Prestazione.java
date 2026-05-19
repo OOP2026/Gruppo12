@@ -25,5 +25,37 @@ public abstract class Prestazione {
         this.ricoveroAssegnato = ricovero;
     }
 
-    public void addMedico(Medico medico) { this.medici.add(medico);}
+    public void addMedico(Medico medico) {
+        if (!this.medici.contains(medico)) {
+            this.medici.add(medico);
+            medico.addPrestazione(this);
+        }
+    }
+    public Integer getNumPrestazione() {
+        return numPrestazione;
+    }
+
+    public LocalDateTime getDataInizio() {
+        return dataInizio;
+    }
+
+    public LocalDateTime getDataFine() {
+        return dataFine;
+    }
+
+    public String getEsito() {
+        return esito;
+    }
+
+    public Ricovero getRicoveroAssegnato() {
+        return ricoveroAssegnato;
+    }
+
+    public List<Medico> getMedici() {
+        return medici;
+    }
+
+    public void setEsito(String esito) {
+        this.esito = esito;
+    }
 }

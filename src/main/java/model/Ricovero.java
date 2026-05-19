@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Ricovero {
+    private String codiceRicovero
     private LocalDateTime dataAmmissione;
     private LocalDateTime dataDimissione;
     private Paziente pazienteAssegnato;
@@ -13,11 +14,12 @@ public class Ricovero {
     private List<Prestazione> listaPrestazioni;
 
 
-    public Ricovero(LocalDateTime dataAmmissione, LocalDateTime dataDimissione){
+    public Ricovero(LocalDateTime dataAmmissione, LocalDateTime dataDimissione, String codiceRicovero){
     this.dataAmmissione = dataAmmissione;
     this.dataDimissione = dataDimissione;
     this.listaAmministratori = new ArrayList<>();
     this.listaPrestazioni = new ArrayList<>();
+    this.codiceRicovero = codiceRicovero;
     }
 
     public void setPaziente(Paziente paziente) {
@@ -38,5 +40,41 @@ public class Ricovero {
     public void registraNuovoIntervento(Integer numPrestazione, LocalDateTime dataInizio, LocalDateTime dataFine, String esito, Integer salaOperatoria){
         Intervento nuovoIntervento = new Intervento(numPrestazione, dataInizio, dataFine, esito, salaOperatoria);
         this.listaPrestazioni.add(nuovoIntervento);
+    }
+
+    public LocalDateTime getDataAmmissione() {
+        return dataAmmissione;
+    }
+
+    public LocalDateTime getDataDimissione() {
+        return dataDimissione;
+    }
+
+    public Paziente getPazienteAssegnato() {
+        return pazienteAssegnato;
+    }
+
+    public Letto getLettoAssegnato() {
+        return lettoAssegnato;
+    }
+
+    public List<Amministratore> getListaAmministratori() {
+        return listaAmministratori;
+    }
+
+    public List<Prestazione> getListaPrestazioni() {
+        return listaPrestazioni;
+    }
+
+    public void setDataDimissione(LocalDateTime dataDimissione) {
+        this.dataDimissione = dataDimissione;
+    }
+
+    public String getCodiceRicovero() {
+        return codiceRicovero;
+    }
+
+    public void setCodiceRicovero(String codiceRicovero) {
+        this.codiceRicovero = codiceRicovero;
     }
 }

@@ -20,4 +20,16 @@ public class Stanza {
     }
 
     public void addLetto(Letto letto) { this.letti.add(letto);}
+
+    public Integer getNumeroStanza() {
+        return numeroStanza;
+    }
+
+    public Reparto getReparto() {
+        return reparto;
+    }
+
+    public List<Letto> getLetti() {
+        return letti;
+    }
 }

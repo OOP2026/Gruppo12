@@ -11,6 +11,13 @@ public class Intervento extends Prestazione {
         this.salaOperatoria = salaOperatoria;
     }
 
+    public Integer getSalaOperatoria() {
+        return salaOperatoria;
+    }
+
+    public void setSalaOperatoria(Integer salaOperatoria) {
+        this.salaOperatoria = salaOperatoria;
+    }
 }
 
 
