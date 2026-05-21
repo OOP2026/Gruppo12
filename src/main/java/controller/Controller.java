@@ -57,8 +57,16 @@ public class Controller {
 	}
 
 	public Utente effettuaLogin(String login, String password) {
+		if (login == null || password == null ) {
+			return null;
+		}
+
+		if (listaUtenti == null) {
+			return null;
+		}
+
 		for (Utente utenteLoggato : listaUtenti) {
-			if (utenteLoggato.login(login, password)) {
+			if (utenteLoggato != null && utenteLoggato.login(login, password)) {
 				return utenteLoggato;
 			}
 		}
@@ -71,7 +79,6 @@ public class Controller {
 			if(r.getCodiceRicovero().equals(codiceRicovero)){
 				return false;
 			}
-
 		}
 
 		Paziente pazienteTrovato = null;
@@ -88,16 +95,45 @@ public class Controller {
 			return false;
 		}
 
+
 		Ricovero r = new Ricovero(LocalDateTime.now(), null, codiceRicovero);
 		r.setPaziente(pazienteTrovato);
 		r.setLetto(lettoTrovato);
 		pazienteTrovato.addRicovero(r);
 		lettoTrovato.addRicovero(r);
 
-
 		listaRicoveri.add(r);
 		return true;
+	}
 
-    }
+	public boolean aggiungiDimissione(String codiceRicovero, String matricolaPaziente, String matricolaLetto) {
+
+		if (codiceRicovero == null) {
+			return false;
+		}
+
+		for (Ricovero r : listaRicoveri) {
+			if (r.getCodiceRicovero().equals(codiceRicovero)) {
+
+
+				if (r.getPazienteAssegnato().getMatricolaPaziente().equals(matricolaPaziente) &&
+						r.getLettoAssegnato().getMatricolaLetto().equals(matricolaLetto)) {
+
+
+					if (r.getDataDimissione() == null) {
+
+
+						r.setDataDimissione(LocalDateTime.now());
+
+						return true;
+					} else {
+						return false;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
 
 }
