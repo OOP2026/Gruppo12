@@ -19,7 +19,20 @@ public class Stanza {
         this.reparto = reparto;
     }
 
-    public void addLetto(Letto letto) { this.letti.add(letto);}
+    public void addLetto(Letto letto) {
+        if (!this.letti.contains(letto)) {
+            this.letti.add(letto);
+            letto.setStanza(this);
+        }
+    }
+
+    public boolean removeLetto(Letto letto) {
+        if (this.letti.remove(letto)) {
+            letto.setStanza(null);
+            return true;
+        }
+        return false;
+    }
 
     public Integer getNumeroStanza() {
         return numeroStanza;

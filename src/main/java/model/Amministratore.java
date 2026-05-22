@@ -16,8 +16,35 @@ public class Amministratore extends Utente {
         this.listaMalattie = new ArrayList<>();
     }
 
-    public void addRicovero(Ricovero nuovoRicovero) { this.listaRicoveri.add(nuovoRicovero);}
-    public void addMalattia(Malattia nuovaMalattia) { this.listaMalattie.add(nuovaMalattia);}
+    public void addRicovero(Ricovero nuovoRicovero) {
+        if (!this.listaRicoveri.contains(nuovoRicovero)) {
+            this.listaRicoveri.add(nuovoRicovero);
+            nuovoRicovero.addAmministratore(this);
+        }
+    }
+
+    public void addMalattia(Malattia nuovaMalattia) {
+        if (!this.listaMalattie.contains(nuovaMalattia)) {
+            this.listaMalattie.add(nuovaMalattia);
+            nuovaMalattia.setAmministratore(this);
+        }
+    }
+
+    public boolean removeRicovero(Ricovero ricovero) {
+        if (this.listaRicoveri.remove(ricovero)) {
+            ricovero.removeAmministratore(this);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeMalattia(Malattia malattia) {
+        if (this.listaMalattie.remove(malattia)) {
+            malattia.setAmministratore(null);
+            return true;
+        }
+        return false;
+    }
 
     public String getMatricolaAmministratore() {
         return matricolaAmministratore;

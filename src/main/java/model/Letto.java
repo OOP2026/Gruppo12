@@ -29,5 +29,18 @@ public class Letto {
         this.stanza = stanza;
     }
 
-    public void addRicovero(Ricovero ricovero) { this.ricoveri.add(ricovero);}
+    public void addRicovero(Ricovero ricovero) {
+        if (!this.ricoveri.contains(ricovero)) {
+            this.ricoveri.add(ricovero);
+            ricovero.setLetto(this);
+        }
+    }
+
+    public boolean removeRicovero(Ricovero ricovero) {
+        if (this.ricoveri.remove(ricovero)) {
+            ricovero.setLetto(null);
+            return true;
+        }
+        return false;
+    }
 }

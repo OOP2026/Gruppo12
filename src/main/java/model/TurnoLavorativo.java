@@ -17,7 +17,20 @@ public class TurnoLavorativo {
         this.medici = new ArrayList<>();
     }
 
-    public void addMedico(Medico medico) { this.medici.add(medico);}
+    public void addMedico(Medico medico) { 
+    if(!this.medici.contains(medico)) {
+        this.medici.add(medico);
+        medico.addTurnoLavorativo(this);
+    }
+}
+
+    public boolean removeMedico(Medico medico) {
+        if (this.medici.remove(medico)) {
+            medico.removeTurnoLavorativo(this);
+            return true;
+        }
+        return false;
+    }
 
     public LocalDateTime getInizioTurno() {
         return inizioTurno;

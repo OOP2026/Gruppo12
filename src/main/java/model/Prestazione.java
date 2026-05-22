@@ -31,6 +31,14 @@ public abstract class Prestazione {
             medico.addPrestazione(this);
         }
     }
+
+    public boolean removeMedico(Medico medico) {
+        if (this.medici.remove(medico)) {
+            medico.removePrestazione(this);
+            return true;
+        }
+        return false;
+    }
     public Integer getNumPrestazione() {
         return numPrestazione;
     }

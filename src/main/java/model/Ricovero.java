@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Ricovero {
-    private String codiceRicovero
+    private String codiceRicovero;
     private LocalDateTime dataAmmissione;
     private LocalDateTime dataDimissione;
     private Paziente pazienteAssegnato;
@@ -32,14 +32,21 @@ public class Ricovero {
 
     public void addAmministratore(Amministratore nuovoAmministratore) { this.listaAmministratori.add(nuovoAmministratore);}
 
-    public void registraNuovaVisita(Integer numPrestazione, LocalDateTime dataInizio, LocalDateTime dataFine, String esito, String tipoVisita){
-        Visita nuovaVisita = new Visita(numPrestazione, dataInizio, dataFine, esito, tipoVisita);
-        this.listaPrestazioni.add(nuovaVisita);
+    public boolean removeAmministratore(Amministratore amministratore) {
+        return this.listaAmministratori.remove(amministratore);
     }
 
-    public void registraNuovoIntervento(Integer numPrestazione, LocalDateTime dataInizio, LocalDateTime dataFine, String esito, Integer salaOperatoria){
-        Intervento nuovoIntervento = new Intervento(numPrestazione, dataInizio, dataFine, esito, salaOperatoria);
-        this.listaPrestazioni.add(nuovoIntervento);
+    public void addPrestazione(Prestazione prestazione) {
+    this.listaPrestazioni.add(prestazione);
+    prestazione.setRicovero(this); // Bidirezionalità!
+}
+
+    public boolean removePrestazione(Prestazione prestazione) {
+        if (this.listaPrestazioni.remove(prestazione)) {
+            prestazione.setRicovero(null);
+            return true;
+        }
+        return false;
     }
 
     public LocalDateTime getDataAmmissione() {

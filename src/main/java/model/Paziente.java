@@ -17,7 +17,18 @@ public class Paziente {
     }
 
     public void addRicovero(Ricovero nuovoRicovero) {
-        this.listaRicoveri.add(nuovoRicovero);
+        if (!this.listaRicoveri.contains(nuovoRicovero)) {
+            this.listaRicoveri.add(nuovoRicovero);
+            nuovoRicovero.setPaziente(this);
+        }
+    }
+
+    public boolean removeRicovero(Ricovero ricovero) {
+        if (this.listaRicoveri.remove(ricovero)) {
+            ricovero.setPaziente(null);
+            return true;
+        }
+        return false;
     }
 
     public String getNome() {

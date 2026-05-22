@@ -24,17 +24,50 @@ public class Medico extends Utente {
         nuovaMalattia.setMedico(this);
     }
 
+    public boolean removeMalattia(Malattia malattia) {
+        if (this.listaMalattie.remove(malattia)) {
+            malattia.setMedico(null);
+            return true;
+        }
+        return false;
+    }
+
     public void setReparto(Reparto reparto) {
         this.reparto = reparto;
     }
 
-    public void addTurnoLavorativo(TurnoLavorativo nuovoTurnoLavorativo) {
-        this.listaTurniLavorativi.add(nuovoTurnoLavorativo);
+    public Reparto getReparto() {
+        return this.reparto;
+    }
+
+    public void addTurnoLavorativo(TurnoLavorativo turno) {
+    if(!this.listaTurniLavorativi.contains(turno)) {
+        this.listaTurniLavorativi.add(turno);
+        turno.addMedico(this);
+    }
+}
+
+      public boolean removeTurnoLavorativo(TurnoLavorativo turnoLavorativo) {
+        if (this.listaTurniLavorativi.remove(turnoLavorativo)) {
+            turnoLavorativo.removeMedico(this); 
+            return true;
+        }
+        return false;
     }
 
     public void addPrestazione(Prestazione nuovaPrestazione) {
-        this.listaPrestazioni.add(nuovaPrestazione);
-        nuovaPrestazione.addMedico(this);
+        if (!this.listaPrestazioni.contains(nuovaPrestazione)) {
+            this.listaPrestazioni.add(nuovaPrestazione);
+            nuovaPrestazione.addMedico(this);
+        }
+    }
+
+    public boolean removePrestazione(Prestazione prestazione) {
+        if (this.listaPrestazioni.remove(prestazione)) {
+            prestazione.getMedici().remove(this);
+            return true;
+        }
+        return false;
     }
 
     public List<Prestazione> getListaPrestazioni() {
