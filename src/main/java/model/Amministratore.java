@@ -7,6 +7,7 @@ public class Amministratore extends Utente {
     private String matricolaAmministratore;
     private List<Ricovero> listaRicoveri;
     private List<Malattia> listaMalattie;
+    private List<Reparto> listaReparto ;
 
     public Amministratore(String login, String password, String matricolaAmministratore )
     {

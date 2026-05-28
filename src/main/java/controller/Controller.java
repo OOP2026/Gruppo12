@@ -20,6 +20,14 @@ public class Controller {
     private List<TurnoLavorativo> listaTurniLavorativi = new ArrayList<>();
 
     public Controller() {
+        inizializzaUtentiPredefiniti();
+    }
+
+    private void inizializzaUtentiPredefiniti() {
+        listaUtenti.add(new Amministratore("admin", "admin", "AMM1"));
+        Medico medicoPredefinito = new Medico("medico", "medico", "MED1");
+        listaUtenti.add(medicoPredefinito);
+        listaMedici.add(medicoPredefinito);
     }
 
     public boolean assegnaMalattiaMedico(String matricolaMedico, String idMalattia, LocalDateTime dataInizio, LocalDateTime dataFine) {
@@ -92,10 +100,32 @@ public class Controller {
             return false;
         }
 
-        for (Ricovero ricoveroPassato : lettoTrovato.getRicoveri()) {
-            // Se c'è un ricovero senza data di dimissione, il letto è attualmente occupato!
-            if (ricoveroPassato.getDataDimissione() == null) {
-                return false; // Blocco l'operazione
+
+        LocalDateTime newStart = LocalDateTime.now();
+        LocalDateTime newEnd = null; // aperto
+        for (Ricovero ricoveroEsistente : lettoTrovato.getRicoveri()) {
+            LocalDateTime existStart = ricoveroEsistente.getDataAmmissione();
+            LocalDateTime existEnd = ricoveroEsistente.getDataDimissione();
+
+
+            boolean overlaps;
+            if (existEnd == null) {
+                overlaps = !newStart.isAfter(existStart);
+                overlaps = true;
+            } else {
+
+                LocalDateTime aStart = newStart;
+                LocalDateTime aEnd = (newEnd == null) ? LocalDateTime.MAX : newEnd;
+                LocalDateTime bStart = existStart;
+                LocalDateTime bEnd = existEnd;
+                overlaps = overlap(aStart, aEnd, bStart, bEnd);
+            }
+
+            if (overlaps) {
+                Paziente pAssegnato = ricoveroEsistente.getPazienteAssegnato();
+                if (pAssegnato == null || !pAssegnato.getMatricolaPaziente().equals(pazienteTrovato.getMatricolaPaziente())) {
+                    return false;
+                }
             }
         }
 
@@ -185,35 +215,6 @@ public class Controller {
         return false;
     }
 
-    public boolean rimuoviStanza(Integer numeroStanza) {
-        for (Stanza s : new ArrayList<>(listaStanze)) {
-            if (s.getNumeroStanza().equals(numeroStanza)) {
-                for (Letto l : new ArrayList<>(s.getLetti())) {
-                    rimuoviLetto(l.getMatricolaLetto());
-                }
-                for (Reparto rep : listaReparti) {
-                    rep.removeStanza(s);
-                }
-                listaStanze.remove(s);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean rimuoviLetto(String matricolaLetto) {
-        for (Letto l : new ArrayList<>(listaLetti)) {
-            if (l.getMatricolaLetto().equals(matricolaLetto)) {
-                for (Ricovero r : new ArrayList<>(l.getRicoveri())) {
-                    rimuoviRicovero(r.getCodiceRicovero());
-                }
-                if (l.getStanza() != null) l.getStanza().removeLetto(l);
-                listaLetti.remove(l);
-                return true;
-            }
-        }
-        return false;
-    }
 
     public boolean rimuoviPrestazione(Integer numPrestazione) {
         for (Ricovero r : listaRicoveri) {
@@ -291,6 +292,20 @@ public class Controller {
         return aStart.isBefore(bEnd) && bStart.isBefore(aEnd);
     }
 
+    private boolean isLettoOccupato(Letto letto) {
+        if (letto == null) {
+            return false;
+        }
+
+        for (Ricovero ricovero : letto.getRicoveri()) {
+            if (ricovero.getDataDimissione() == null) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public boolean registraVisita(String codiceRicovero, Integer numPrestazione, LocalDateTime dataInizio, LocalDateTime dataFine, String esito, String tipoVisita, String matricolaMedico) {
         if (codiceRicovero == null || matricolaMedico == null) return false;
         Ricovero ricovero = null;
@@ -301,7 +316,10 @@ public class Controller {
 
         boolean inTurno = false;
         for (TurnoLavorativo t : medico.getListaTurniLavorativi()) {
-            if (!dataInizio.isBefore(t.getInizioTurno()) && !dataFine.isAfter(t.getFineTurno())) { inTurno = true; break; }
+            if (!dataInizio.isBefore(t.getInizioTurno()) && !dataFine.isAfter(t.getFineTurno())) {
+                inTurno = true;
+                break;
+            }
         }
         if (!inTurno) return false;
 
@@ -310,7 +328,7 @@ public class Controller {
         }
 
         Visita v = new Visita(numPrestazione, dataInizio, dataFine, esito, tipoVisita);
-    ricovero.addPrestazione(v);
+        ricovero.addPrestazione(v);
         listaPrestazioni.add(v);
         medico.addPrestazione(v);
         return true;
@@ -326,7 +344,10 @@ public class Controller {
 
         boolean inTurno = false;
         for (TurnoLavorativo t : medico.getListaTurniLavorativi()) {
-            if (!dataInizio.isBefore(t.getInizioTurno()) && !dataFine.isAfter(t.getFineTurno())) { inTurno = true; break; }
+            if (!dataInizio.isBefore(t.getInizioTurno()) && !dataFine.isAfter(t.getFineTurno())) {
+                inTurno = true;
+                break;
+            }
         }
         if (!inTurno) return false;
 
@@ -335,7 +356,7 @@ public class Controller {
         }
 
         Intervento it = new Intervento(numPrestazione, dataInizio, dataFine, esito, salaOperatoria);
-    ricovero.addPrestazione(it);
+        ricovero.addPrestazione(it);
         listaPrestazioni.add(it);
         medico.addPrestazione(it);
         return true;
@@ -355,7 +376,8 @@ public class Controller {
         List<Prestazione> result = new ArrayList<>();
         for (Prestazione p : listaPrestazioni) {
             for (Medico m : p.getMedici()) {
-                if (m.getMatricolaMedico().equals(matricolaMedico) && p.getDataInizio().toLocalDate().equals(giorno)) result.add(p);
+                if (m.getMatricolaMedico().equals(matricolaMedico) && p.getDataInizio().toLocalDate().equals(giorno))
+                    result.add(p);
             }
         }
         return result;
@@ -367,7 +389,8 @@ public class Controller {
         for (Prestazione p : listaPrestazioni) {
             for (Medico m : p.getMedici()) {
                 LocalDate d = p.getDataInizio().toLocalDate();
-                if (m.getMatricolaMedico().equals(matricolaMedico) && (d.isEqual(inizioSettimana) || (d.isAfter(inizioSettimana) && d.isBefore(fine)) || d.isEqual(fine))) result.add(p);
+                if (m.getMatricolaMedico().equals(matricolaMedico) && (d.isEqual(inizioSettimana) || (d.isAfter(inizioSettimana) && d.isBefore(fine)) || d.isEqual(fine)))
+                    result.add(p);
             }
         }
         return result;
@@ -375,19 +398,39 @@ public class Controller {
 
     public List<Letto> cercaLettiDisponibili(String nomeReparto) {
         List<Letto> disponibili = new ArrayList<>();
-        Reparto target = null;
-        for (Reparto r : listaReparti) if (r.getNomeReparto().equals(nomeReparto)) target = r;
-        if (target == null) return disponibili;
-        for (Stanza s : target.getStanze()) {
-            for (Letto l : s.getLetti()) {
-                boolean occupato = false;
-                for (Ricovero r : l.getRicoveri()) {
-                    if (r.getDataDimissione() == null) { occupato = true; break; }
-                }
-                if (!occupato) disponibili.add(l);
+        for (Letto letto : cercaLettiPerReparto(nomeReparto)) {
+            if (!isLettoOccupato(letto)) {
+                disponibili.add(letto);
             }
         }
         return disponibili;
+    }
+
+    public List<Letto> cercaLettiPerReparto(String nomeReparto) {
+        List<Letto> letti = new ArrayList<>();
+        Reparto target = null;
+        for (Reparto r : listaReparti) if (r.getNomeReparto().equals(nomeReparto)) target = r;
+        if (target == null) return letti;
+        for (Stanza s : target.getStanze()) {
+            for (Letto l : s.getLetti()) {
+                letti.add(l);
+            }
+        }
+        return letti;
+    }
+
+    public boolean lettoOccupato(String matricolaLetto) {
+        if (matricolaLetto == null) {
+            return false;
+        }
+
+        for (Letto letto : listaLetti) {
+            if (matricolaLetto.equals(letto.getMatricolaLetto())) {
+                return isLettoOccupato(letto);
+            }
+        }
+
+        return false;
     }
 
     public List<Ricovero> dimissioniInData(LocalDate data) {
@@ -409,20 +452,32 @@ public class Controller {
         LocalDateTime start = mal.getDataInizio();
         LocalDateTime end = mal.getDataFine();
         List<Medico> candidati = new ArrayList<>();
-        if (rep != null) candidati.addAll(rep.getMedici()); else candidati.addAll(listaMedici);
+        if (rep != null) candidati.addAll(rep.getMedici());
+        else candidati.addAll(listaMedici);
         for (Medico c : candidati) {
             if (c == assente) continue;
             boolean conflitto = false;
             for (TurnoLavorativo t : c.getListaTurniLavorativi()) {
-                if (overlap(start, end, t.getInizioTurno(), t.getFineTurno())) { conflitto = true; break; }
+                if (overlap(start, end, t.getInizioTurno(), t.getFineTurno())) {
+                    conflitto = true;
+                    break;
+                }
             }
             if (conflitto) continue;
             for (Prestazione p : c.getListaPrestazioni()) {
-                if (overlap(start, end, p.getDataInizio(), p.getDataFine())) { conflitto = true; break; }
+                if (overlap(start, end, p.getDataInizio(), p.getDataFine())) {
+                    conflitto = true;
+                    break;
+                }
             }
             if (!conflitto) suggeriti.add(c);
         }
         return suggeriti;
     }
 
+
+    public List<Reparto> getListaReparti() {
+        return listaReparti;
+    }
 }
+
