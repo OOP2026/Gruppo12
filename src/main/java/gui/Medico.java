@@ -39,6 +39,7 @@ public class Medico {
     private JButton agendaGiornalieraButton;
     private JButton agendaSettimanaleButton;
     private JList<String> agendaList;
+    private JButton logoutButton;
 
     private DefaultListModel<String> agendaListModel;
 
@@ -77,6 +78,7 @@ public class Medico {
         aggiornaEsitoButton.addActionListener(e -> aggiornaEsitoPrestazione());
         agendaGiornalieraButton.addActionListener(e -> caricaAgendaGiornaliera());
         agendaSettimanaleButton.addActionListener(e -> caricaAgendaSettimanale());
+        logoutButton.addActionListener(e -> logout());
     }
 
     private void registraVisita() {
@@ -243,6 +245,20 @@ public class Medico {
         }
     }
 
+    private void logout() {
+        int choice = JOptionPane.showConfirmDialog(panel, "Tornare alla pagina di login?", "Logout", JOptionPane.YES_NO_OPTION);
+        if (choice != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        Window currentWindow = SwingUtilities.getWindowAncestor(panel);
+        if (currentWindow != null) {
+            currentWindow.dispose();
+        }
+
+        login.showLogin(controller);
+    }
+
     private String descriviPrestazione(Prestazione prestazione) {
         String tipo;
         if (prestazione instanceof Visita) {
@@ -348,7 +364,7 @@ public class Medico {
         esitoField = new JTextField();
         panel1.add(esitoField, new com.intellij.uiDesigner.core.GridConstraints(5, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(170, -1), null, 0, false));
         final JLabel label8 = new JLabel();
-        label8.setText("Tipo visita");
+        label8.setText("Prestazione");
         panel1.add(label8, new com.intellij.uiDesigner.core.GridConstraints(6, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         tipoVisitaField = new JTextField();
         panel1.add(tipoVisitaField, new com.intellij.uiDesigner.core.GridConstraints(6, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(170, -1), null, 0, false));
@@ -379,7 +395,7 @@ public class Medico {
         agendaDataField = new JTextField();
         panel3.add(agendaDataField, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(170, -1), null, 0, false));
         final JPanel panel4 = new JPanel();
-        panel4.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), 8, -1));
+        panel4.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), 8, -1));
         panel3.add(panel4, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_EAST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         agendaGiornalieraButton = new JButton();
         agendaGiornalieraButton.setText("Agenda giornaliera");
@@ -387,6 +403,9 @@ public class Medico {
         agendaSettimanaleButton = new JButton();
         agendaSettimanaleButton.setText("Agenda settimanale");
         panel4.add(agendaSettimanaleButton, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        logoutButton = new JButton();
+        logoutButton.setText("Logout");
+        panel4.add(logoutButton, new com.intellij.uiDesigner.core.GridConstraints(0, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         agendaList = new JList();
         panel3.add(agendaList, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 2, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(260, 120), null, 0, false));
     }
@@ -419,4 +438,5 @@ public class Medico {
     public JComponent $$$getRootComponent$$$() {
         return panel;
     }
+
 }

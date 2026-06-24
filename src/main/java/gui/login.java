@@ -1,11 +1,13 @@
 package gui;
 
 import controller.Controller;
+import model.Utente;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.text.StyleContext;
 import java.awt.*;
+import java.util.Arrays;
 import java.util.Locale;
 
 public class login {
@@ -21,7 +23,7 @@ public class login {
 
     public login(Controller controller) {
         this.controller = controller != null ? controller : new Controller();
-        // Componenti inizializzati dal GUI builder ($$$setupUI$$$)
+
         configureUi();
     }
 
@@ -34,64 +36,81 @@ public class login {
         panel.setBackground(new Color(245, 247, 250));
 
         ACCEDIButton.addActionListener(e -> {
-            String login = textField1.getText() != null ? textField1.getText().trim() : "";
-            if (login.isEmpty()) {
+            String username = readUsername();
+            if (username.isEmpty()) {
                 JOptionPane.showMessageDialog(panel, "Inserisci un nome utente per procedere.", "Accesso", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            String login2 = passwordField1.getPassword() != null ? new String(passwordField1.getPassword()).trim() : "";
-            if (login2.isEmpty()) {
+
+            char[] passwordChars = passwordField1.getPassword();
+            String password = passwordChars != null ? new String(passwordChars) : "";
+            if (passwordChars != null) {
+                Arrays.fill(passwordChars, '\0');
+            }
+
+            if (password.isEmpty()) {
                 JOptionPane.showMessageDialog(panel, "Inserisci password per procedere.", "Accesso", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            model.Utente utenteLoggato = controller.effettuaLogin(login, login2);
+            Utente utenteLoggato = controller.effettuaLogin(username, password);
             if (utenteLoggato == null) {
                 JOptionPane.showMessageDialog(panel, "Credenziali non valide.", "Accesso", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(panel);
-            if (currentFrame != null) {
-                currentFrame.dispose();
-            }
-
-            if (utenteLoggato instanceof model.Amministratore) {
-                gui.Amministratore home = new gui.Amministratore(controller);
-                JFrame homeFrame = new JFrame("Dashboard amministratore");
-                homeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                homeFrame.setContentPane(home.getContentPane());
-                homeFrame.setMinimumSize(new Dimension(860, 560));
-                homeFrame.setLocationRelativeTo(null);
-                homeFrame.pack();
-                homeFrame.setVisible(true);
-            } else if (utenteLoggato instanceof model.Medico) {
-                gui.Medico home = new gui.Medico(controller);
-                JFrame homeFrame = new JFrame("Dashboard medico");
-                homeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                homeFrame.setContentPane(home.getContentPane());
-                homeFrame.setMinimumSize(new Dimension(980, 640));
-                homeFrame.setLocationRelativeTo(null);
-                homeFrame.pack();
-                homeFrame.setVisible(true);
-            } else {
-                JOptionPane.showMessageDialog(panel, "Tipo utente non supportato.", "Accesso", JOptionPane.WARNING_MESSAGE);
-            }
+            apriDashboardPer(utenteLoggato);
+            chiudiFinestraCorrente();
         });
+    }
+
+    private String readUsername() {
+        return textField1.getText() != null ? textField1.getText().trim() : "";
+    }
+
+    private void chiudiFinestraCorrente() {
+        Window currentWindow = SwingUtilities.getWindowAncestor(panel);
+        if (currentWindow != null) {
+            currentWindow.dispose();
+        }
+    }
+
+    private void apriDashboardPer(Utente utenteLoggato) {
+        if (utenteLoggato instanceof model.Amministratore) {
+            apriFinestra(new gui.Amministratore(controller).getContentPane(), "Dashboard amministratore", new Dimension(860, 560));
+        } else if (utenteLoggato instanceof model.Medico) {
+            apriFinestra(new gui.Medico(controller).getContentPane(), "Dashboard medico", new Dimension(980, 640));
+        } else {
+            JOptionPane.showMessageDialog(panel, "Tipo utente non supportato.", "Accesso", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private void apriFinestra(JComponent contentPane, String titolo, Dimension dimensioneMinima) {
+        JFrame homeFrame = new JFrame(titolo);
+        homeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        homeFrame.setContentPane(contentPane);
+        homeFrame.setMinimumSize(dimensioneMinima);
+        homeFrame.setLocationRelativeTo(null);
+        homeFrame.pack();
+        homeFrame.setVisible(true);
+    }
+
+    public static void showLogin(Controller controller) {
+        JFrame frame = new JFrame("Accedi al sistema");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        login loginView = new login(controller);
+        frame.setContentPane(loginView.getContentPane());
+        frame.setMinimumSize(new Dimension(420, 300));
+        frame.setLocationRelativeTo(null);
+        frame.pack();
+        frame.setVisible(true);
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                JFrame frame = new JFrame("Accedi al sistema");
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                login loginView = new login();
-                frame.setContentPane(loginView.getContentPane());
-                frame.setMinimumSize(new Dimension(420, 300));
-                frame.setLocationRelativeTo(null);
-                frame.pack();
-                frame.setVisible(true);
+                showLogin(null);
             }
         });
     }

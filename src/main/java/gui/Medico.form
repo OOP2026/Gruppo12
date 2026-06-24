@@ -1,254 +1,264 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="gui.Medico">
-	<grid id="27dc6" binding="panel" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="12" vgap="12">
-		<margin top="0" left="0" bottom="0" right="0"/>
-		<constraints>
-			<xy x="20" y="20" width="980" height="640"/>
-		</constraints>
-		<properties>
-			<background color="-657414"/>
-		</properties>
-		<border type="none"/>
-		<children>
-			<component id="titleLabel" class="javax.swing.JLabel">
-				<constraints>
-					<grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-				</constraints>
-				<properties>
-					<font name="Dialog" size="22" style="1"/>
-					<text value="Dashboard medico"/>
-				</properties>
-			</component>
-			<component id="statusLabelId" class="javax.swing.JLabel" binding="statusLabel">
-				<constraints>
-					<grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-				</constraints>
-				<properties>
-					<text value="Gestisci prestazioni e agenda."/>
-				</properties>
-			</component>
-			<grid id="prestazioniPanel" layout-manager="GridLayoutManager" row-count="9" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="8" vgap="8">
-				<margin top="10" left="10" bottom="10" right="10"/>
-				<constraints>
-					<grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-				</constraints>
-				<properties/>
-				<border type="none"/>
-				<children>
-					<component id="medicoMatricolaLabel" class="javax.swing.JLabel">
-						<constraints>
-							<grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-						</constraints>
-						<properties>
-							<text value="Matricola medico"/>
-						</properties>
-					</component>
-					<component id="medicoMatricolaFieldId" class="javax.swing.JTextField" binding="medicoMatricolaField">
-						<constraints>
-							<grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-								<preferred-size width="170" height="-1"/>
-							</grid>
-						</constraints>
-					</component>
-					<component id="ricoveroCodiceLabel" class="javax.swing.JLabel">
-						<constraints>
-							<grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-						</constraints>
-						<properties>
-							<text value="Codice ricovero"/>
-						</properties>
-					</component>
-					<component id="ricoveroCodiceFieldId" class="javax.swing.JTextField" binding="ricoveroCodiceField">
-						<constraints>
-							<grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-								<preferred-size width="170" height="-1"/>
-							</grid>
-						</constraints>
-					</component>
-					<component id="numPrestazioneLabel" class="javax.swing.JLabel">
-						<constraints>
-							<grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-						</constraints>
-						<properties>
-							<text value="Numero prestazione"/>
-						</properties>
-					</component>
-					<component id="numPrestazioneFieldId" class="javax.swing.JTextField" binding="numPrestazioneField">
-						<constraints>
-							<grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-								<preferred-size width="170" height="-1"/>
-							</grid>
-						</constraints>
-					</component>
-					<component id="dataInizioLabel" class="javax.swing.JLabel">
-						<constraints>
-							<grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-						</constraints>
-						<properties>
-							<text value="Data inizio"/>
-						</properties>
-					</component>
-					<component id="dataInizioFieldId" class="javax.swing.JTextField" binding="dataInizioField">
-						<constraints>
-							<grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-								<preferred-size width="170" height="-1"/>
-							</grid>
-						</constraints>
-					</component>
-					<component id="dataFineLabel" class="javax.swing.JLabel">
-						<constraints>
-							<grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-						</constraints>
-						<properties>
-							<text value="Data fine"/>
-						</properties>
-					</component>
-					<component id="dataFineFieldId" class="javax.swing.JTextField" binding="dataFineField">
-						<constraints>
-							<grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-								<preferred-size width="170" height="-1"/>
-							</grid>
-						</constraints>
-					</component>
-					<component id="esitoLabel" class="javax.swing.JLabel">
-						<constraints>
-							<grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-						</constraints>
-						<properties>
-							<text value="Esito"/>
-						</properties>
-					</component>
-					<component id="esitoFieldId" class="javax.swing.JTextField" binding="esitoField">
-						<constraints>
-							<grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-								<preferred-size width="170" height="-1"/>
-							</grid>
-						</constraints>
-					</component>
-					<component id="tipoVisitaLabel" class="javax.swing.JLabel">
-						<constraints>
-							<grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-						</constraints>
-						<properties>
-							<text value="Tipo visita"/>
-						</properties>
-					</component>
-					<component id="tipoVisitaFieldId" class="javax.swing.JTextField" binding="tipoVisitaField">
-						<constraints>
-							<grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-								<preferred-size width="170" height="-1"/>
-							</grid>
-						</constraints>
-					</component>
-					<component id="salaOperatoriaLabel" class="javax.swing.JLabel">
-						<constraints>
-							<grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-						</constraints>
-						<properties>
-							<text value="Sala operatoria"/>
-						</properties>
-					</component>
-					<component id="salaOperatoriaFieldId" class="javax.swing.JTextField" binding="salaOperatoriaField">
-						<constraints>
-							<grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-								<preferred-size width="170" height="-1"/>
-							</grid>
-						</constraints>
-					</component>
-					<grid id="prestazioniButtonsPanel" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="8" vgap="-1">
-						<margin top="0" left="0" bottom="0" right="0"/>
-						<constraints>
-							<grid row="8" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-						</constraints>
-						<properties/>
-						<border type="none"/>
-						<children>
-							<component id="registraVisitaButtonId" class="javax.swing.JButton" binding="registraVisitaButton">
-								<constraints>
-									<grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-								</constraints>
-								<properties>
-									<text value="Registra visita"/>
-								</properties>
-							</component>
-							<component id="registraInterventoButtonId" class="javax.swing.JButton" binding="registraInterventoButton">
-								<constraints>
-									<grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-								</constraints>
-								<properties>
-									<text value="Registra intervento"/>
-								</properties>
-							</component>
-							<component id="aggiornaEsitoButtonId" class="javax.swing.JButton" binding="aggiornaEsitoButton">
-								<constraints>
-									<grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-								</constraints>
-								<properties>
-									<text value="Aggiorna esito"/>
-								</properties>
-							</component>
-						</children>
-					</grid>
-				</children>
-			</grid>
-			<grid id="agendaPanel" layout-manager="GridLayoutManager" row-count="4" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="8" vgap="8">
-				<margin top="10" left="10" bottom="10" right="10"/>
-				<constraints>
-					<grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-				</constraints>
-				<properties/>
-				<border type="none"/>
-				<children>
-					<component id="agendaDataLabel" class="javax.swing.JLabel">
-						<constraints>
-							<grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-						</constraints>
-						<properties>
-							<text value="Data agenda"/>
-						</properties>
-					</component>
-					<component id="agendaDataFieldId" class="javax.swing.JTextField" binding="agendaDataField">
-						<constraints>
-							<grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-								<preferred-size width="170" height="-1"/>
-							</grid>
-						</constraints>
-					</component>
-					<grid id="agendaButtonsPanel" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="8" vgap="-1">
-						<margin top="0" left="0" bottom="0" right="0"/>
-						<constraints>
-							<grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-						</constraints>
-						<properties/>
-						<border type="none"/>
-						<children>
-							<component id="agendaGiornalieraButtonId" class="javax.swing.JButton" binding="agendaGiornalieraButton">
-								<constraints>
-									<grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-								</constraints>
-								<properties>
-									<text value="Agenda giornaliera"/>
-								</properties>
-							</component>
-							<component id="agendaSettimanaleButtonId" class="javax.swing.JButton" binding="agendaSettimanaleButton">
-								<constraints>
-									<grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-								</constraints>
-								<properties>
-									<text value="Agenda settimanale"/>
-								</properties>
-							</component>
-						</children>
-					</grid>
-					<component id="agendaListId" class="javax.swing.JList" binding="agendaList">
-						<constraints>
-							<grid row="2" column="0" row-span="2" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
-								<preferred-size width="260" height="120"/>
-							</grid>
-						</constraints>
-					</component>
-				</children>
-			</grid>
-		</children>
-		</grid>
+  <grid id="27dc6" binding="panel" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="12" vgap="12">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="980" height="640"/>
+    </constraints>
+    <properties>
+      <background color="-657414"/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <component id="titleLabel" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font name="Dialog" size="22" style="1"/>
+          <text value="Dashboard medico"/>
+        </properties>
+      </component>
+      <component id="statusLabelId" class="javax.swing.JLabel" binding="statusLabel">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Gestisci prestazioni e agenda."/>
+        </properties>
+      </component>
+      <grid id="prestazioniPanel" layout-manager="GridLayoutManager" row-count="9" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="8" vgap="8">
+        <margin top="10" left="10" bottom="10" right="10"/>
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="medicoMatricolaLabel" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Matricola medico"/>
+            </properties>
+          </component>
+          <component id="medicoMatricolaFieldId" class="javax.swing.JTextField" binding="medicoMatricolaField">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="170" height="-1"/>
+              </grid>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="ricoveroCodiceLabel" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Codice ricovero"/>
+            </properties>
+          </component>
+          <component id="ricoveroCodiceFieldId" class="javax.swing.JTextField" binding="ricoveroCodiceField">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="170" height="-1"/>
+              </grid>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="numPrestazioneLabel" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Numero prestazione"/>
+            </properties>
+          </component>
+          <component id="numPrestazioneFieldId" class="javax.swing.JTextField" binding="numPrestazioneField">
+            <constraints>
+              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="170" height="-1"/>
+              </grid>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="dataInizioLabel" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Data inizio"/>
+            </properties>
+          </component>
+          <component id="dataInizioFieldId" class="javax.swing.JTextField" binding="dataInizioField">
+            <constraints>
+              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="170" height="-1"/>
+              </grid>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="dataFineLabel" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Data fine"/>
+            </properties>
+          </component>
+          <component id="dataFineFieldId" class="javax.swing.JTextField" binding="dataFineField">
+            <constraints>
+              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="170" height="-1"/>
+              </grid>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="esitoLabel" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Esito"/>
+            </properties>
+          </component>
+          <component id="esitoFieldId" class="javax.swing.JTextField" binding="esitoField">
+            <constraints>
+              <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="170" height="-1"/>
+              </grid>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="tipoVisitaLabel" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Prestazione"/>
+            </properties>
+          </component>
+          <component id="tipoVisitaFieldId" class="javax.swing.JTextField" binding="tipoVisitaField">
+            <constraints>
+              <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="170" height="-1"/>
+              </grid>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="salaOperatoriaLabel" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Sala operatoria"/>
+            </properties>
+          </component>
+          <component id="salaOperatoriaFieldId" class="javax.swing.JTextField" binding="salaOperatoriaField">
+            <constraints>
+              <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="170" height="-1"/>
+              </grid>
+            </constraints>
+            <properties/>
+          </component>
+          <grid id="prestazioniButtonsPanel" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="8" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="8" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="registraVisitaButtonId" class="javax.swing.JButton" binding="registraVisitaButton">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Registra visita"/>
+                </properties>
+              </component>
+              <component id="registraInterventoButtonId" class="javax.swing.JButton" binding="registraInterventoButton">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Registra intervento"/>
+                </properties>
+              </component>
+              <component id="aggiornaEsitoButtonId" class="javax.swing.JButton" binding="aggiornaEsitoButton">
+                <constraints>
+                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Aggiorna esito"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+        </children>
+      </grid>
+      <grid id="agendaPanel" layout-manager="GridLayoutManager" row-count="4" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="8" vgap="8">
+        <margin top="10" left="10" bottom="10" right="10"/>
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="agendaDataLabel" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Data agenda"/>
+            </properties>
+          </component>
+          <component id="agendaDataFieldId" class="javax.swing.JTextField" binding="agendaDataField">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="170" height="-1"/>
+              </grid>
+            </constraints>
+            <properties/>
+          </component>
+          <grid id="agendaButtonsPanel" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="8" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="agendaGiornalieraButtonId" class="javax.swing.JButton" binding="agendaGiornalieraButton">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Agenda giornaliera"/>
+                </properties>
+              </component>
+              <component id="agendaSettimanaleButtonId" class="javax.swing.JButton" binding="agendaSettimanaleButton">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Agenda settimanale"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <component id="agendaListId" class="javax.swing.JList" binding="agendaList">
+            <constraints>
+              <grid row="2" column="0" row-span="2" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="260" height="120"/>
+              </grid>
+            </constraints>
+            <properties/>
+          </component>
+        </children>
+      </grid>
+    </children>
+  </grid>
 </form>

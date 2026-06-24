@@ -35,6 +35,8 @@ public class Amministratore {
     private JList<String> dimissioniList;
     private JButton apriGestioneLettiButton;
     private JButton assegnaMalattiaButton;
+    private JButton suggerisciSostitutiButton;
+    private JButton logoutButton;
 
     private DefaultListModel<String> dimissioniListModel;
 
@@ -68,6 +70,8 @@ public class Amministratore {
         cercaDimissioniButton.addActionListener(e -> cercaDimissioni());
         apriGestioneLettiButton.addActionListener(e -> apriGestioneLetti());
         assegnaMalattiaButton.addActionListener(e -> assegnaMalattiaMedico());
+        suggerisciSostitutiButton.addActionListener(e -> suggerisciSostituti());
+        logoutButton.addActionListener(e -> logout());
     }
 
     private void assegnaMalattiaMedico() {
@@ -108,6 +112,63 @@ public class Amministratore {
         }
     }
 
+    private void suggerisciSostituti() {
+        String idMalattia = JOptionPane.showInputDialog(panel, "ID malattia:");
+        if (idMalattia == null || idMalattia.trim().isEmpty()) {
+            mostraAvviso("ID malattia non valido.");
+            return;
+        }
+
+        List<model.Medico> suggeriti = controller.suggerisciSostituti(idMalattia.trim());
+        if (suggeriti.isEmpty()) {
+            mostraAvviso("Nessun sostituto disponibile per la malattia indicata.");
+            return;
+        }
+
+        DefaultListModel<String> suggerimentiModel = new DefaultListModel<>();
+        for (model.Medico medico : suggeriti) {
+            suggerimentiModel.addElement(descriviMedico(medico));
+        }
+
+        JList<String> lista = new JList<>(suggerimentiModel);
+        lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Permette di selezionare un solo medico
+        lista.setSelectedIndex(0); // Seleziona il primo di default per comodità
+        lista.setVisibleRowCount(Math.min(8, suggerimentiModel.size()));
+
+        JScrollPane scrollPane = new JScrollPane(lista);
+        scrollPane.setPreferredSize(new Dimension(380, Math.min(220, 40 + suggerimentiModel.size() * 24)));
+
+        // Usiamo showConfirmDialog per avere i pulsanti OK e Annulla e catturare l'azione
+        int option = JOptionPane.showConfirmDialog(
+                panel,
+                scrollPane,
+                "Seleziona un sostituto per " + idMalattia.trim(),
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE
+        );
+
+        // Se l'utente clicca su "OK"
+        if (option == JOptionPane.OK_OPTION) {
+            String selezionato = lista.getSelectedValue();
+            if (selezionato != null) {
+                // Estraiamo la matricola dalla stringa generata dal metodo descriviMedico
+                // (il formato è "Matricola - Login - Reparto")
+                String matricolaSostituto = selezionato.split(" - ")[0].trim();
+
+                // Richiamiamo il Controller per eseguire lo scambio!
+                boolean successo = controller.effettuaSostituzione(idMalattia.trim(), matricolaSostituto);
+
+                if (successo) {
+                    aggiornaStato("Sostituzione effettuata con il medico: " + matricolaSostituto);
+                    JOptionPane.showMessageDialog(panel, "Sostituzione completata con successo nel database!", "Operazione Riuscita", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    mostraAvviso("Errore durante la sostituzione delle prestazioni.");
+                }
+            } else {
+                mostraAvviso("Nessun medico selezionato.");
+            }
+        }
+    }
     private void aggiungiPaziente() {
         String matricola = leggi(pazienteMatricolaField);
         String nome = leggi(pazienteNomeField);
@@ -199,6 +260,20 @@ public class Amministratore {
         frame.setVisible(true);
     }
 
+    private void logout() {
+        int choice = JOptionPane.showConfirmDialog(panel, "Tornare alla pagina di login?", "Logout", JOptionPane.YES_NO_OPTION);
+        if (choice != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        Window currentWindow = SwingUtilities.getWindowAncestor(panel);
+        if (currentWindow != null) {
+            currentWindow.dispose();
+        }
+
+        login.showLogin(controller);
+    }
+
     
 
     private String descriviRicovero(Ricovero ricovero) {
@@ -206,6 +281,11 @@ public class Amministratore {
         Paziente paziente = ricovero.getPazienteAssegnato();
         String matricolaPaziente = paziente != null ? paziente.getMatricolaPaziente() : "?";
         return "Ricovero " + codice + " - paziente " + matricolaPaziente;
+    }
+
+    private String descriviMedico(model.Medico medico) {
+        String reparto = medico.getReparto() != null ? medico.getReparto().getNomeReparto() : "?";
+        return medico.getMatricolaMedico() + " - " + medico.getLogin() + " - reparto " + reparto;
     }
 
     private String leggi(JTextField field) {
@@ -261,7 +341,7 @@ public class Amministratore {
         label1.setText("Dashboard amministratore");
         panel.add(label1, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         statusLabel = new JLabel();
-        statusLabel.setText("Gestisci pazienti, ricoveri, dimissioni e disponibilita letti.");
+        statusLabel.setText("Gestisci pazienti, ricoveri, dimissioni, disponibilita letti e sostituti.");
         panel.add(statusLabel, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(4, 2, new Insets(10, 10, 10, 10), 8, 8));
@@ -328,7 +408,7 @@ public class Amministratore {
         dimissioniList = new JList<>();
         panel4.add(dimissioniList, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(240, 100), null, 0, false));
         final JPanel panel5 = new JPanel();
-        panel5.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(3, 1, new Insets(10, 10, 10, 10), 8, 8));
+        panel5.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(4, 1, new Insets(10, 10, 10, 10), 8, 8));
         panel.add(panel5, new com.intellij.uiDesigner.core.GridConstraints(3, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         panel5.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-1907998)), "Strumenti"));
         apriGestioneLettiButton = new JButton();
@@ -337,8 +417,12 @@ public class Amministratore {
         assegnaMalattiaButton = new JButton();
         assegnaMalattiaButton.setText("Assegna malattia a medico");
         panel5.add(assegnaMalattiaButton, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
-        panel5.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        suggerisciSostitutiButton = new JButton();
+        suggerisciSostitutiButton.setText("Suggerisci sostituti");
+        panel5.add(suggerisciSostitutiButton, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        logoutButton = new JButton();
+        logoutButton.setText("Logout");
+        panel5.add(logoutButton, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
