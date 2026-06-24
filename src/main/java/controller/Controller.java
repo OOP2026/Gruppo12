@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Controller {
+    private static final String DEFAULT_ADMIN = "admin";
     private final UtenteDAO utenteDAO = new UtentePostgresDao();
     private final AmministratoreDAO amministratoreDAO = new AmministratorePostgresDao();
     private final MedicoDAO medicoDAO = new MedicoPostgresDao();
@@ -59,8 +60,8 @@ public class Controller {
     }
 
     private void sincronizzaUtentiPredefinitiSulDatabase() {
-        if (utenteDAO.getUtenteById("admin") == null) {
-            amministratoreDAO.insertAmministratore(new Amministratore("admin", "admin", "AMM1"));
+        if (utenteDAO.getUtenteById(DEFAULT_ADMIN) == null) {
+            amministratoreDAO.insertAmministratore(new Amministratore(DEFAULT_ADMIN, DEFAULT_ADMIN, "AMM1"));
         }
     }
 
@@ -103,30 +104,51 @@ public class Controller {
         listaStanze.clear();
         listaLetti.clear();
 
-        for (Reparto reparto : repartoDAO.getAllReparti()) {
-            listaReparti.add(reparto);
-        }
+        // Load Reparti
+        listaReparti.addAll(repartoDAO.getAllReparti());
 
+        // Load Stanze
         for (Stanza stanza : stanzaDAO.getAllStanze()) {
-            Reparto reparto = stanza.getReparto() != null ? trovaRepartoPerNome(stanza.getReparto().getNomeReparto()) : null;
-            if (reparto != null) {
-                stanza.setReparto(reparto);
-                if (!reparto.getStanze().contains(stanza)) {
-                    reparto.addStanza(stanza);
-                }
-            }
+            associaRepartoAStanza(stanza);
             listaStanze.add(stanza);
         }
 
+        // Load Letti
         for (Letto letto : lettoDAO.getAllLetti()) {
-            Stanza stanza = letto.getStanza() != null ? trovaStanzaPerNumero(letto.getStanza().getNumeroStanza()) : null;
-            if (stanza != null) {
-                letto.setStanza(stanza);
-                if (!stanza.getLetti().contains(letto)) {
-                    stanza.addLetto(letto);
-                }
-            }
+            associaStanzaALetto(letto);
             listaLetti.add(letto);
+        }
+    }
+
+    private void associaRepartoAStanza(Stanza stanza) {
+        if (stanza.getReparto() == null) {
+            return;
+        }
+
+        Reparto reparto = trovaRepartoPerNome(stanza.getReparto().getNomeReparto());
+        if (reparto == null) {
+            return;
+        }
+
+        stanza.setReparto(reparto);
+        if (!reparto.getStanze().contains(stanza)) {
+            reparto.addStanza(stanza);
+        }
+    }
+
+    private void associaStanzaALetto(Letto letto) {
+        if (letto.getStanza() == null) {
+            return;
+        }
+
+        Stanza stanza = trovaStanzaPerNumero(letto.getStanza().getNumeroStanza());
+        if (stanza == null) {
+            return;
+        }
+
+        letto.setStanza(stanza);
+        if (!stanza.getLetti().contains(letto)) {
+            stanza.addLetto(letto);
         }
     }
 
@@ -331,53 +353,19 @@ public class Controller {
     }
 
     public boolean aggiungiRicovero(String codiceRicovero, String matricolaPaziente, String matricolaLetto) {
-        for (Ricovero r : listaRicoveri) {
-            if (r.getCodiceRicovero().equals(codiceRicovero)) {
-                return false;
-            }
+        if (trovaRicoveroPerCodice(codiceRicovero) != null) {
+            return false;
         }
 
-        Paziente pazienteTrovato = null;
-        Letto lettoTrovato = null;
-
-        for (Paziente paziente : listaPazienti) {
-            if (paziente.getMatricolaPaziente().equals(matricolaPaziente)) pazienteTrovato = paziente;
-        }
-        for (Letto l : listaLetti) {
-            if (l.getMatricolaLetto().equals(matricolaLetto)) lettoTrovato = l;
-        }
+        Paziente pazienteTrovato = trovaPazientePerMatricola(matricolaPaziente);
+        Letto lettoTrovato = trovaLettoPerMatricola(matricolaLetto);
 
         if (pazienteTrovato == null || lettoTrovato == null) {
             return false;
         }
 
-
-        LocalDateTime newStart = LocalDateTime.now();
-        LocalDateTime newEnd = null; // aperto
-        for (Ricovero ricoveroEsistente : lettoTrovato.getRicoveri()) {
-            LocalDateTime existStart = ricoveroEsistente.getDataAmmissione();
-            LocalDateTime existEnd = ricoveroEsistente.getDataDimissione();
-
-
-            boolean overlaps;
-            if (existEnd == null) {
-                overlaps = !newStart.isAfter(existStart);
-                overlaps = true;
-            } else {
-
-                LocalDateTime aStart = newStart;
-                LocalDateTime aEnd = (newEnd == null) ? LocalDateTime.MAX : newEnd;
-                LocalDateTime bStart = existStart;
-                LocalDateTime bEnd = existEnd;
-                overlaps = overlap(aStart, aEnd, bStart, bEnd);
-            }
-
-            if (overlaps) {
-                Paziente pAssegnato = ricoveroEsistente.getPazienteAssegnato();
-                if (pAssegnato == null || !pAssegnato.getMatricolaPaziente().equals(pazienteTrovato.getMatricolaPaziente())) {
-                    return false;
-                }
-            }
+        if (!isLettoValidoPerNuovoRicovero(lettoTrovato, pazienteTrovato)) {
+            return false;
         }
 
         Ricovero r = new Ricovero(LocalDateTime.now(), null, codiceRicovero);
@@ -389,6 +377,36 @@ public class Controller {
         listaRicoveri.add(r);
         ricoveroDAO.insertRicovero(r);
         return true;
+    }
+
+    private boolean isLettoValidoPerNuovoRicovero(Letto letto, Paziente pazienteRichiedente) {
+        LocalDateTime newStart = LocalDateTime.now();
+
+        for (Ricovero ricoveroEsistente : letto.getRicoveri()) {
+            boolean overlaps = verificaSovrapposizioneDate(newStart, ricoveroEsistente);
+
+            if (overlaps) {
+                Paziente pAssegnato = ricoveroEsistente.getPazienteAssegnato();
+                // Se c'è sovrapposizione ma il paziente non corrisponde o è null, il letto non è valido
+                if (pAssegnato == null || !pAssegnato.getMatricolaPaziente().equals(pazienteRichiedente.getMatricolaPaziente())) {
+                    return false;
+                }
+            }
+        }
+        return true; // Nessuna sovrapposizione bloccante trovata
+    }
+
+    private boolean verificaSovrapposizioneDate(LocalDateTime newStart, Ricovero ricoveroEsistente) {
+        LocalDateTime existStart = ricoveroEsistente.getDataAmmissione();
+        LocalDateTime existEnd = ricoveroEsistente.getDataDimissione();
+
+        if (existEnd == null) {
+            return true;
+        }
+
+        LocalDateTime newEnd = LocalDateTime.MAX;
+
+        return overlap(newStart, newEnd, existStart, existEnd);
     }
 
     public boolean aggiungiDimissione(String codiceRicovero, String matricolaPaziente, String matricolaLetto) {
@@ -615,39 +633,51 @@ public class Controller {
         }
 
         Malattia mal = malattiaDAO.getMalattiaById(idMalattia);
-        if (mal == null) return suggeriti;
-        Medico assente = null;
-        if (mal.getMedicoAssegnato() != null) {
-            assente = trovaMedicoPerMatricola(mal.getMedicoAssegnato().getMatricolaMedico());
+        if (mal == null) {
+            return suggeriti;
         }
+
+        Medico assente = ottieniMedicoAssente(mal);
         if (assente == null) {
-            assente = mal.getMedicoAssegnato();
+            return suggeriti;
         }
-        if (assente == null) return suggeriti;
-        Reparto rep = assente.getReparto();
+
+        // Se ha un reparto cerchiamo lì, altrimenti tra tutti i medici
+        List<Medico> candidati = assente.getReparto() != null
+                ? assente.getReparto().getMedici()
+                : listaMedici;
+
         LocalDateTime start = mal.getDataInizio();
         LocalDateTime end = mal.getDataFine();
-        List<Medico> candidati = new ArrayList<>();
 
-        if (rep != null) candidati.addAll(rep.getMedici());
-        else candidati.addAll(listaMedici);
-
-        for (Medico c : candidati) {
-            if (c == assente) continue; // Salta il medico malato
-            boolean conflitto = false;
-
-            // Unico vero conflitto: il collega sta già operando/visitando un altro paziente?
-            for (Prestazione p : c.getListaPrestazioni()) {
-                if (overlap(start, end, p.getDataInizio(), p.getDataFine())) {
-                    conflitto = true;
-                    break;
-                }
+        for (Medico candidato : candidati) {
+            // Se non è il medico malato ed è disponibile, lo aggiungiamo
+            if (candidato != assente && isMedicoDisponibile(candidato, start, end)) {
+                suggeriti.add(candidato);
             }
-
-            // Se non è impegnato in altre prestazioni, è un ottimo sostituto!
-            if (!conflitto) suggeriti.add(c);
         }
+
         return suggeriti;
+    }
+
+    private Medico ottieniMedicoAssente(Malattia mal) {
+        if (mal.getMedicoAssegnato() == null) {
+            return null;
+        }
+
+        Medico medicoInMemoria = trovaMedicoPerMatricola(mal.getMedicoAssegnato().getMatricolaMedico());
+        // Se lo troviamo in memoria restituiamo quello, altrimenti quello dell'oggetto Malattia
+        return medicoInMemoria != null ? medicoInMemoria : mal.getMedicoAssegnato();
+    }
+
+    private boolean isMedicoDisponibile(Medico candidato, LocalDateTime start, LocalDateTime end) {
+        // Controlla se il collega sta già operando/visitando un altro paziente
+        for (Prestazione p : candidato.getListaPrestazioni()) {
+            if (overlap(start, end, p.getDataInizio(), p.getDataFine())) {
+                return false; // Conflitto trovato, non è disponibile
+            }
+        }
+        return true;
     }
 
     public List<Medico> suggerisciSostituto(String idMalattia) {
@@ -657,19 +687,18 @@ public class Controller {
     public boolean effettuaSostituzione(String idMalattia, String matricolaSostituto) {
         if (idMalattia == null || matricolaSostituto == null) return false;
 
-        // 1. Recupero la malattia, prima dalla memoria e poi dal DB
         Malattia mal = trovaMalattiaPerId(idMalattia);
         if (mal == null) {
             mal = malattiaDAO.getMalattiaById(idMalattia);
         }
         if (mal == null || mal.getMedicoAssegnato() == null) return false;
 
-        // 2. Recupero i due medici coinvolti
+        // Recupero i due medici coinvolti
         Medico assente = mal.getMedicoAssegnato();
         Medico sostituto = trovaMedicoPerMatricola(matricolaSostituto);
         if (sostituto == null || sostituto == assente) return false;
 
-        // 3. Aggiorno il medico assegnato alla malattia
+        // Aggiorno il medico assegnato alla malattia
         if (assente != null) {
             assente.removeMalattia(mal);
         }
@@ -679,7 +708,7 @@ public class Controller {
         LocalDateTime start = mal.getDataInizio();
         LocalDateTime end = mal.getDataFine();
 
-        // 4. Trovo le prestazioni assegnate al medico malato che cadono nel periodo di assenza
+        // Trovo le prestazioni assegnate al medico malato che cadono nel periodo di assenza
         List<Prestazione> prestazioniDaRiassegnare = new ArrayList<>();
         for (Prestazione p : assente.getListaPrestazioni()) {
             if (overlap(start, end, p.getDataInizio(), p.getDataFine())) {
@@ -687,16 +716,14 @@ public class Controller {
             }
         }
 
-        // Se non ci sono prestazioni in quei giorni, l'operazione è comunque un successo
+
         if (prestazioniDaRiassegnare.isEmpty()) return true;
 
-        // 5. Eseguo lo scambio (Swap)
         for (Prestazione p : prestazioniDaRiassegnare) {
-            // Sostituzione in memoria (liste Java)
+
             p.removeMedico(assente);
             p.addMedico(sostituto);
 
-            // Sostituzione persistente nel Database
             if (prestazioneDAO instanceof PrestazionePostgresDao) {
                 ((PrestazionePostgresDao) prestazioneDAO).sostituisciMedicoInPrestazione(
                         p.getNumPrestazione(),
