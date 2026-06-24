@@ -73,25 +73,29 @@ public class Medico {
         dataFineField.setText(adesso.plusMinutes(30).format(DATE_TIME_FORMATTER));
         esitoField.setText("In attesa");
 
-        registraVisitaButton.addActionListener(e -> registraVisita());
-        registraInterventoButton.addActionListener(e -> registraIntervento());
+        registraVisitaButton.addActionListener(e -> elaboraPrestazione(false));
+        registraInterventoButton.addActionListener(e -> elaboraPrestazione(true));
         aggiornaEsitoButton.addActionListener(e -> aggiornaEsitoPrestazione());
         agendaGiornalieraButton.addActionListener(e -> caricaAgendaGiornaliera());
         agendaSettimanaleButton.addActionListener(e -> caricaAgendaSettimanale());
         logoutButton.addActionListener(e -> logout());
     }
 
-    private void registraVisita() {
+    private void elaboraPrestazione(boolean isIntervento) {
         String matricolaMedico = leggi(medicoMatricolaField);
         String codiceRicovero = leggi(ricoveroCodiceField);
         String numeroPrestazione = leggi(numPrestazioneField);
         String dataInizio = leggi(dataInizioField);
         String dataFine = leggi(dataFineField);
         String esito = leggi(esitoField);
-        String tipoVisita = leggi(tipoVisitaField);
 
-        if (matricolaMedico.isEmpty() || codiceRicovero.isEmpty() || numeroPrestazione.isEmpty() || dataInizio.isEmpty() || dataFine.isEmpty() || tipoVisita.isEmpty()) {
-            mostraAvviso("Compila matricola medico, ricovero, numero prestazione, date e tipo visita.");
+        // Leggo il campo specifico in base al tipo
+        String campoSpecifico = isIntervento ? leggi(salaOperatoriaField) : leggi(tipoVisitaField);
+
+        if (matricolaMedico.isEmpty() || codiceRicovero.isEmpty() || numeroPrestazione.isEmpty() ||
+                dataInizio.isEmpty() || dataFine.isEmpty() || campoSpecifico.isEmpty()) {
+            mostraAvviso("Compila tutti i campi: matricola, ricovero, numero, date e " +
+                    (isIntervento ? "sala operatoria." : "tipo visita."));
             return;
         }
 
@@ -105,68 +109,21 @@ public class Medico {
                 return;
             }
 
-            boolean registrata = controller.registraVisita(
-                    codiceRicovero,
-                    numero,
-                    inizio,
-                    fine,
-                    esito,
-                    tipoVisita,
-                    matricolaMedico
-            );
+            boolean registrata;
+            if (isIntervento) {
+                Integer sala = Integer.valueOf(campoSpecifico);
+                registrata = controller.registraIntervento(codiceRicovero, numero, inizio, fine, esito, sala, matricolaMedico);
+            } else {
+                registrata = controller.registraVisita(codiceRicovero, numero, inizio, fine, esito, campoSpecifico, matricolaMedico);
+            }
 
             if (registrata) {
-                aggiornaStato("Visita " + numero + " registrata con successo.");
+                String tipo = isIntervento ? "Intervento " : "Visita ";
+                aggiornaStato(tipo + numero + " registrato con successo.");
             } else {
-                mostraAvviso("Impossibile registrare la visita: verifica turno, sovrapposizioni e dati inseriti.");
-            }
-        } catch (NumberFormatException ex) {
-            mostraAvviso("Numero prestazione non valido.");
-        } catch (DateTimeParseException ex) {
-            mostraAvviso("Data/ora non valida. Usa il formato gg/mm/aaaa hh:mm.");
-        }
-    }
-
-    private void registraIntervento() {
-        String matricolaMedico = leggi(medicoMatricolaField);
-        String codiceRicovero = leggi(ricoveroCodiceField);
-        String numeroPrestazione = leggi(numPrestazioneField);
-        String dataInizio = leggi(dataInizioField);
-        String dataFine = leggi(dataFineField);
-        String esito = leggi(esitoField);
-        String sala = leggi(salaOperatoriaField);
-
-        if (matricolaMedico.isEmpty() || codiceRicovero.isEmpty() || numeroPrestazione.isEmpty() || dataInizio.isEmpty() || dataFine.isEmpty() || sala.isEmpty()) {
-            mostraAvviso("Compila matricola medico, ricovero, numero prestazione, date e sala operatoria.");
-            return;
-        }
-
-        try {
-            Integer numero = Integer.valueOf(numeroPrestazione);
-            Integer salaOperatoria = Integer.valueOf(sala);
-            LocalDateTime inizio = LocalDateTime.parse(dataInizio, DATE_TIME_FORMATTER);
-            LocalDateTime fine = LocalDateTime.parse(dataFine, DATE_TIME_FORMATTER);
-
-            if (!fine.isAfter(inizio)) {
-                mostraAvviso("La data fine deve essere successiva alla data inizio.");
-                return;
+                mostraAvviso("Impossibile registrare: verifica turno, sovrapposizioni e dati inseriti.");
             }
 
-            boolean registrato = controller.registraIntervento(
-                    codiceRicovero,
-                    numero,
-                    inizio,
-                    fine,
-                    esito,
-                    salaOperatoria,
-                    matricolaMedico
-            );
-
-            if (registrato) {
-                aggiornaStato("Intervento " + numero + " registrato con successo.");
-            } else {
-                mostraAvviso("Impossibile registrare l'intervento: verifica turno, sovrapposizioni e dati inseriti.");
-            }
         } catch (NumberFormatException ex) {
             mostraAvviso("Numero prestazione o sala operatoria non validi.");
         } catch (DateTimeParseException ex) {
