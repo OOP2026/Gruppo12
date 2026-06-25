@@ -38,7 +38,7 @@ public class Ricovero {
 
     public void addPrestazione(Prestazione prestazione) {
     this.listaPrestazioni.add(prestazione);
-    prestazione.setRicovero(this); // Bidirezionalità!
+    prestazione.setRicovero(this);
 }
 
     public boolean removePrestazione(Prestazione prestazione) {

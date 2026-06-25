@@ -34,7 +34,7 @@ public class MedicoPostgresDao extends AbstractPostgresDao implements MedicoDAO 
 			}
 			medicoStatement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to insert medico", exception);
+			throw new IllegalStateException("Impossibile inserire il medico", exception);
 		}
 	}
 
@@ -54,7 +54,7 @@ public class MedicoPostgresDao extends AbstractPostgresDao implements MedicoDAO 
 				}
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to read medico", exception);
+			throw new IllegalStateException("Impossibile leggere il medico", exception);
 		}
 		return null;
 	}
@@ -73,7 +73,7 @@ public class MedicoPostgresDao extends AbstractPostgresDao implements MedicoDAO 
 				medici.add(medico);
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to read medici", exception);
+			throw new IllegalStateException("Impossibile leggere i medici", exception);
 		}
 		return medici;
 	}
@@ -96,7 +96,7 @@ public class MedicoPostgresDao extends AbstractPostgresDao implements MedicoDAO 
 			medicoStatement.setString(3, medico.getLogin());
 			medicoStatement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to update medico", exception);
+			throw new IllegalStateException("Impossibile aggiornare il medico", exception);
 		}
 	}
 
@@ -123,7 +123,7 @@ public class MedicoPostgresDao extends AbstractPostgresDao implements MedicoDAO 
 				}
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to delete medico", exception);
+			throw new IllegalStateException("Impossibile eliminare il medico", exception);
 		}
 	}
 }

@@ -12,7 +12,7 @@ abstract class AbstractPostgresDao {
         try {
             return ConnessioneDatabase.getInstance().getConnection();
         } catch (SQLException exception) {
-            throw new IllegalStateException("Unable to access PostgreSQL connection", exception);
+            throw new IllegalStateException("Impossibile accedere alla connessione PostegreSQL", exception);
         }
     }
 

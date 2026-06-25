@@ -27,7 +27,7 @@ public class StanzaPostgresDao extends AbstractPostgresDao implements StanzaDAO 
 			}
 			statement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to insert stanza", exception);
+			throw new IllegalStateException("Impossibile inserire la stanza", exception);
 		}
 	}
 
@@ -47,7 +47,7 @@ public class StanzaPostgresDao extends AbstractPostgresDao implements StanzaDAO 
 				}
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to read stanza", exception);
+			throw new IllegalStateException("Impossibile leggere la stanza", exception);
 		}
 		return null;
 	}
@@ -66,7 +66,7 @@ public class StanzaPostgresDao extends AbstractPostgresDao implements StanzaDAO 
 				stanze.add(stanza);
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to read stanze", exception);
+			throw new IllegalStateException("Impossibile leggere le stanze", exception);
 		}
 		return stanze;
 	}
@@ -83,7 +83,7 @@ public class StanzaPostgresDao extends AbstractPostgresDao implements StanzaDAO 
 			statement.setInt(2, stanza.getNumeroStanza());
 			statement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to update stanza", exception);
+			throw new IllegalStateException("Impossibile aggiornare la stanza", exception);
 		}
 	}
 
@@ -94,7 +94,7 @@ public class StanzaPostgresDao extends AbstractPostgresDao implements StanzaDAO 
 			statement.setInt(1, numeroStanza);
 			statement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to delete stanza", exception);
+			throw new IllegalStateException("Impossibile eliminare la stanza", exception);
 		}
 	}
 }

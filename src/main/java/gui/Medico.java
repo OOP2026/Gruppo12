@@ -203,17 +203,7 @@ public class Medico {
     }
 
     private void logout() {
-        int choice = JOptionPane.showConfirmDialog(panel, "Tornare alla pagina di login?", "Logout", JOptionPane.YES_NO_OPTION);
-        if (choice != JOptionPane.YES_OPTION) {
-            return;
-        }
-
-        Window currentWindow = SwingUtilities.getWindowAncestor(panel);
-        if (currentWindow != null) {
-            currentWindow.dispose();
-        }
-
-        login.showLogin(controller);
+        SessionNavigation.logoutAndShowLogin(panel, controller);
     }
 
     private String descriviPrestazione(Prestazione prestazione) {

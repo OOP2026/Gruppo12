@@ -33,7 +33,7 @@ public class RicoveroPostgresDao extends AbstractPostgresDao implements Ricovero
 			}
 			statement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to insert ricovero", exception);
+			throw new IllegalStateException("Impossibile inserire il ricovero", exception);
 		}
 	}
 
@@ -57,7 +57,7 @@ public class RicoveroPostgresDao extends AbstractPostgresDao implements Ricovero
 				}
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to read ricovero", exception);
+			throw new IllegalStateException("Impossibile leggere il ricovero", exception);
 		}
 		return null;
 	}
@@ -80,7 +80,7 @@ public class RicoveroPostgresDao extends AbstractPostgresDao implements Ricovero
 				ricoveri.add(ricovero);
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to read ricoveri", exception);
+			throw new IllegalStateException("Impossibile leggere i ricoveri", exception);
 		}
 		return ricoveri;
 	}
@@ -104,7 +104,7 @@ public class RicoveroPostgresDao extends AbstractPostgresDao implements Ricovero
 			statement.setString(5, ricovero.getCodiceRicovero());
 			statement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to update ricovero", exception);
+			throw new IllegalStateException("Impossibile aggiornare il ricovero", exception);
 		}
 	}
 
@@ -115,7 +115,7 @@ public class RicoveroPostgresDao extends AbstractPostgresDao implements Ricovero
 			statement.setString(1, codiceRicovero);
 			statement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to delete ricovero", exception);
+			throw new IllegalStateException("Impossibile cancellare il ricovero", exception);
 		}
 	}
 }

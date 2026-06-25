@@ -27,7 +27,7 @@ public class LettoPostgresDao extends AbstractPostgresDao implements LettoDAO {
 			}
 			statement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to insert letto", exception);
+			throw new IllegalStateException("Impossibile inserire il letto", exception);
 		}
 	}
 
@@ -47,7 +47,7 @@ public class LettoPostgresDao extends AbstractPostgresDao implements LettoDAO {
 				}
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to read letto", exception);
+			throw new IllegalStateException("Impossibile leggere il letto", exception);
 		}
 		return null;
 	}
@@ -66,7 +66,7 @@ public class LettoPostgresDao extends AbstractPostgresDao implements LettoDAO {
 				letti.add(letto);
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to read letti", exception);
+			throw new IllegalStateException("Impossibile leggere i letti", exception);
 		}
 		return letti;
 	}
@@ -83,7 +83,7 @@ public class LettoPostgresDao extends AbstractPostgresDao implements LettoDAO {
 			statement.setString(2, letto.getMatricolaLetto());
 			statement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to update letto", exception);
+			throw new IllegalStateException("Impossibile aggiornare il letto", exception);
 		}
 	}
 
@@ -94,7 +94,7 @@ public class LettoPostgresDao extends AbstractPostgresDao implements LettoDAO {
 			statement.setString(1, matricolaLetto);
 			statement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to delete letto", exception);
+			throw new IllegalStateException("Impossibile eliminare il letto", exception);
 		}
 	}
 }

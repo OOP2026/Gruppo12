@@ -24,7 +24,7 @@ public class UtentePostgresDao extends AbstractPostgresDao implements UtenteDAO 
 			statement.setString(2, utente.getPassword());
 			statement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to insert utente", exception);
+			throw new IllegalStateException("Impossibile inserire l'utente", exception);
 		}
 	}
 
@@ -39,7 +39,7 @@ public class UtentePostgresDao extends AbstractPostgresDao implements UtenteDAO 
 				}
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to read utente", exception);
+			throw new IllegalStateException("Impossibile leggere l'utente", exception);
 		}
 		return null;
 	}
@@ -53,7 +53,7 @@ public class UtentePostgresDao extends AbstractPostgresDao implements UtenteDAO 
 				utenti.add(new Utente(resultSet.getString("login"), resultSet.getString("password")));
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to read utenti", exception);
+			throw new IllegalStateException("Impossibile leggere gli utenti", exception);
 		}
 		return utenti;
 	}
@@ -66,7 +66,7 @@ public class UtentePostgresDao extends AbstractPostgresDao implements UtenteDAO 
 			statement.setString(2, utente.getLogin());
 			statement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to update utente", exception);
+			throw new IllegalStateException("Impossibile aggiornare l'utente", exception);
 		}
 	}
 
@@ -85,7 +85,7 @@ public class UtentePostgresDao extends AbstractPostgresDao implements UtenteDAO 
 			utenteStatement.setString(1, login);
 			utenteStatement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to delete utente", exception);
+			throw new IllegalStateException("Impossibile eliminare l'utente", exception);
 		}
 	}
 }

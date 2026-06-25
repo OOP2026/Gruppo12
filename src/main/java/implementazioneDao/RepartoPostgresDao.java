@@ -21,7 +21,7 @@ public class RepartoPostgresDao extends AbstractPostgresDao implements RepartoDA
 			statement.setString(1, reparto.getNomeReparto());
 			statement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to insert reparto", exception);
+			throw new IllegalStateException("Impossibile inserire il reparto", exception);
 		}
 	}
 
@@ -36,7 +36,7 @@ public class RepartoPostgresDao extends AbstractPostgresDao implements RepartoDA
 				}
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to read reparto", exception);
+			throw new IllegalStateException("Impossibile leggere il reparto", exception);
 		}
 		return null;
 	}
@@ -50,7 +50,7 @@ public class RepartoPostgresDao extends AbstractPostgresDao implements RepartoDA
 				reparti.add(new Reparto(resultSet.getString("nome_reparto")));
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to read reparti", exception);
+			throw new IllegalStateException("Impossibile leggere i reparti", exception);
 		}
 		return reparti;
 	}
@@ -68,7 +68,7 @@ public class RepartoPostgresDao extends AbstractPostgresDao implements RepartoDA
 
 			statement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to update reparto", exception);
+			throw new IllegalStateException("Impossibile aggiornare il reparto", exception);
 		}
 	}
 
@@ -79,7 +79,7 @@ public class RepartoPostgresDao extends AbstractPostgresDao implements RepartoDA
 			statement.setString(1, nomeReparto);
 			statement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to delete reparto", exception);
+			throw new IllegalStateException("Impossibile eliminare il reparto", exception);
 		}
 	}
 }

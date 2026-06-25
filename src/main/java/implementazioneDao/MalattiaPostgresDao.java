@@ -35,7 +35,7 @@ public class MalattiaPostgresDao extends AbstractPostgresDao implements Malattia
 			}
 			statement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to insert malattia", exception);
+			throw new IllegalStateException("Impossibile inserire la malattia", exception);
 		}
 	}
 
@@ -61,7 +61,7 @@ public class MalattiaPostgresDao extends AbstractPostgresDao implements Malattia
 				}
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to read malattia", exception);
+			throw new IllegalStateException("Impossibile leggere la malattia", exception);
 		}
 		return null;
 	}
@@ -84,7 +84,7 @@ public class MalattiaPostgresDao extends AbstractPostgresDao implements Malattia
 				malattie.add(malattia);
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to read malattie", exception);
+			throw new IllegalStateException("Impossibile leggere le malattie", exception);
 		}
 		return malattie;
 	}
@@ -108,7 +108,7 @@ public class MalattiaPostgresDao extends AbstractPostgresDao implements Malattia
 			statement.setString(5, malattia.getIdMalattia());
 			statement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to update malattia", exception);
+			throw new IllegalStateException("Impossibile aggiornare la malattia", exception);
 		}
 	}
 
@@ -119,7 +119,7 @@ public class MalattiaPostgresDao extends AbstractPostgresDao implements Malattia
 			statement.setString(1, idMalattia);
 			statement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to delete malattia", exception);
+			throw new IllegalStateException("Impossibile eliminare la malattia", exception);
 		}
 	}
 }

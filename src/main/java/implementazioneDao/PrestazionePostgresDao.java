@@ -46,7 +46,7 @@ public class PrestazionePostgresDao extends AbstractPostgresDao implements Prest
 
 			insertMediciPrestazione(connection, prestazione);
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to insert prestazione", exception);
+			throw new IllegalStateException("Impossibile inserire la prestazione", exception);
 		}
 	}
 
@@ -61,7 +61,7 @@ public class PrestazionePostgresDao extends AbstractPostgresDao implements Prest
 				}
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to read prestazione", exception);
+			throw new IllegalStateException("Impossibile leggere la prestazione", exception);
 		}
 		return null;
 	}
@@ -75,7 +75,7 @@ public class PrestazionePostgresDao extends AbstractPostgresDao implements Prest
 				prestazioni.add(mapPrestazione(connection, resultSet));
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to read prestazioni", exception);
+			throw new IllegalStateException("Impossibile leggere le prestazioni", exception);
 		}
 		return prestazioni;
 	}
@@ -103,7 +103,7 @@ public class PrestazionePostgresDao extends AbstractPostgresDao implements Prest
 				updateVisitaDetails(connection, (Visita) prestazione);
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to update prestazione", exception);
+			throw new IllegalStateException("Impossibile aggiornare la prestazione", exception);
 		}
 	}
 
@@ -126,7 +126,7 @@ public class PrestazionePostgresDao extends AbstractPostgresDao implements Prest
 			prestazioneStatement.setInt(1, numPrestazione);
 			prestazioneStatement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to delete prestazione", exception);
+			throw new IllegalStateException("Impossibile eliminare la prestazione", exception);
 		}
 	}
 

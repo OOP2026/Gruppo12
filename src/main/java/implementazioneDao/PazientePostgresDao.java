@@ -23,7 +23,7 @@ public class PazientePostgresDao extends AbstractPostgresDao implements Paziente
 			statement.setString(3, paziente.getCognome());
 			statement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to insert paziente", exception);
+			throw new IllegalStateException("Impossibile inserire il paziente", exception);
 		}
 	}
 
@@ -38,7 +38,7 @@ public class PazientePostgresDao extends AbstractPostgresDao implements Paziente
 				}
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to read paziente", exception);
+			throw new IllegalStateException("Impossibile inserie il paziente", exception);
 		}
 		return null;
 	}
@@ -52,7 +52,7 @@ public class PazientePostgresDao extends AbstractPostgresDao implements Paziente
 				pazienti.add(new Paziente(resultSet.getString("matricola_paziente"), resultSet.getString("nome"), resultSet.getString("cognome")));
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to read pazienti", exception);
+			throw new IllegalStateException("Impossibile leggere i pazienti", exception);
 		}
 		return pazienti;
 	}
@@ -66,7 +66,7 @@ public class PazientePostgresDao extends AbstractPostgresDao implements Paziente
 			statement.setString(3, paziente.getMatricolaPaziente());
 			statement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to update paziente", exception);
+			throw new IllegalStateException("Impossibile aggiornare il paziente", exception);
 		}
 	}
 
@@ -77,7 +77,7 @@ public class PazientePostgresDao extends AbstractPostgresDao implements Paziente
 			statement.setString(1, matricolaPaziente);
 			statement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to delete paziente", exception);
+			throw new IllegalStateException("Impossibile eliminare il paziente", exception);
 		}
 	}
 }

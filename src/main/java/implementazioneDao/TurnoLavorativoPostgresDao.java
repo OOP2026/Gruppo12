@@ -23,7 +23,7 @@ public class TurnoLavorativoPostgresDao extends AbstractPostgresDao implements T
 			statement.setTimestamp(3, toTimestamp(turnoLavorativo.getFineTurno()));
 			statement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to insert turno lavorativo", exception);
+			throw new IllegalStateException("Impossibile inserire il turno lavorativo", exception);
 		}
 	}
 
@@ -38,7 +38,7 @@ public class TurnoLavorativoPostgresDao extends AbstractPostgresDao implements T
 				}
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to read turno lavorativo", exception);
+			throw new IllegalStateException("Impossibile leggere il turno lavorativo", exception);
 		}
 		return null;
 	}
@@ -52,7 +52,7 @@ public class TurnoLavorativoPostgresDao extends AbstractPostgresDao implements T
 				turni.add(new TurnoLavorativo(resultSet.getString("id_turno"), toLocalDateTime(resultSet.getTimestamp("inizio_turno")), toLocalDateTime(resultSet.getTimestamp("fine_turno"))));
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to read turni lavorativi", exception);
+			throw new IllegalStateException("Impossibile leggere i turni lavorativi", exception);
 		}
 		return turni;
 	}
@@ -66,7 +66,7 @@ public class TurnoLavorativoPostgresDao extends AbstractPostgresDao implements T
 			statement.setString(3, turnoLavorativo.getIdTurno());
 			statement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to update turno lavorativo", exception);
+			throw new IllegalStateException("Impossibile aggiornare il turno lavorativo", exception);
 		}
 	}
 
@@ -77,7 +77,7 @@ public class TurnoLavorativoPostgresDao extends AbstractPostgresDao implements T
 			statement.setString(1, idTurno);
 			statement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to delete turno lavorativo", exception);
+			throw new IllegalStateException("Impossibile eliminare il turno lavorativo", exception);
 		}
 	}
 }

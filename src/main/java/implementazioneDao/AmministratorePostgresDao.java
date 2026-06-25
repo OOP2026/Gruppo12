@@ -28,7 +28,7 @@ public class AmministratorePostgresDao extends AbstractPostgresDao implements Am
 			amministratoreStatement.setString(2, amministratore.getMatricolaAmministratore());
 			amministratoreStatement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to insert amministratore", exception);
+			throw new IllegalStateException("Impossibile inserire l'amministratore", exception);
 		}
 	}
 
@@ -43,7 +43,7 @@ public class AmministratorePostgresDao extends AbstractPostgresDao implements Am
 				}
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to read amministratore", exception);
+			throw new IllegalStateException("Impossibile leggere l'amministratore", exception);
 		}
 		return null;
 	}
@@ -57,7 +57,7 @@ public class AmministratorePostgresDao extends AbstractPostgresDao implements Am
 				amministratori.add(new Amministratore(resultSet.getString("login"), resultSet.getString("password"), resultSet.getString("matricola_amministratore")));
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to read amministratori", exception);
+			throw new IllegalStateException("Impossibile leggere gli amministratori", exception);
 		}
 		return amministratori;
 	}
@@ -75,7 +75,7 @@ public class AmministratorePostgresDao extends AbstractPostgresDao implements Am
 			amministratoreStatement.setString(2, amministratore.getLogin());
 			amministratoreStatement.executeUpdate();
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to update amministratore", exception);
+			throw new IllegalStateException("Impossibile aggiornare l'amministratore", exception);
 		}
 	}
 
@@ -102,7 +102,7 @@ public class AmministratorePostgresDao extends AbstractPostgresDao implements Am
 				}
 			}
 		} catch (SQLException exception) {
-			throw new IllegalStateException("Unable to delete amministratore", exception);
+			throw new IllegalStateException("Impossibile eliminare l'amministratore", exception);
 		}
 	}
 }

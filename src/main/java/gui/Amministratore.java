@@ -132,7 +132,7 @@ public class Amministratore {
 
         JList<String> lista = new JList<>(suggerimentiModel);
         lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Permette di selezionare un solo medico
-        lista.setSelectedIndex(0); // Seleziona il primo di default per comodità
+        lista.setSelectedIndex(0); // Seleziona il primo di default
         lista.setVisibleRowCount(Math.min(8, suggerimentiModel.size()));
 
         JScrollPane scrollPane = new JScrollPane(lista);
@@ -261,17 +261,7 @@ public class Amministratore {
     }
 
     private void logout() {
-        int choice = JOptionPane.showConfirmDialog(panel, "Tornare alla pagina di login?", "Logout", JOptionPane.YES_NO_OPTION);
-        if (choice != JOptionPane.YES_OPTION) {
-            return;
-        }
-
-        Window currentWindow = SwingUtilities.getWindowAncestor(panel);
-        if (currentWindow != null) {
-            currentWindow.dispose();
-        }
-
-        login.showLogin(controller);
+        SessionNavigation.logoutAndShowLogin(panel, controller);
     }
 
     

@@ -33,7 +33,6 @@ public final class ConnessioneDatabase {
 	}
 
 	public synchronized void closeConnection() throws SQLException {
-		// Connections are now created per call and closed by the caller.
 	}
 
 	private void loadDriver() {
