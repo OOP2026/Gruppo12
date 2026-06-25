@@ -21,7 +21,7 @@ public class Medico {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-    private Controller controller;
+    private final Controller controller;
     private JPanel panel;
     private JLabel statusLabel;
     private JTextField medicoMatricolaField;

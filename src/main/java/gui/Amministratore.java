@@ -18,7 +18,7 @@ import java.util.Locale;
 public class Amministratore {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    private Controller controller;
+    private final Controller controller;
     private JPanel panel;
     private JLabel statusLabel;
     private JTextField pazienteMatricolaField;
@@ -125,14 +125,24 @@ public class Amministratore {
             return;
         }
 
-        DefaultListModel<String> suggerimentiModel = new DefaultListModel<>();
+        DefaultListModel<model.Medico> suggerimentiModel = new DefaultListModel<>();
         for (model.Medico medico : suggeriti) {
-            suggerimentiModel.addElement(descriviMedico(medico));
+            suggerimentiModel.addElement(medico);
         }
 
-        JList<String> lista = new JList<>(suggerimentiModel);
-        lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Permette di selezionare un solo medico
-        lista.setSelectedIndex(0); // Seleziona il primo di default
+        JList<model.Medico> lista = new JList<>(suggerimentiModel);
+        lista.setCellRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof model.Medico) {
+                    setText(descriviMedico((model.Medico) value));
+                }
+                return this;
+            }
+        });
+        lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        lista.setSelectedIndex(0);
         lista.setVisibleRowCount(Math.min(8, suggerimentiModel.size()));
 
         JScrollPane scrollPane = new JScrollPane(lista);
@@ -147,15 +157,10 @@ public class Amministratore {
                 JOptionPane.PLAIN_MESSAGE
         );
 
-        // Se l'utente clicca su "OK"
         if (option == JOptionPane.OK_OPTION) {
-            String selezionato = lista.getSelectedValue();
+            model.Medico selezionato = lista.getSelectedValue();
             if (selezionato != null) {
-                // Estraiamo la matricola dalla stringa generata dal metodo descriviMedico
-                // (il formato è "Matricola - Login - Reparto")
-                String matricolaSostituto = selezionato.split(" - ")[0].trim();
-
-                // Richiamiamo il Controller per eseguire lo scambio!
+                String matricolaSostituto = selezionato.getMatricolaMedico();
                 boolean successo = controller.effettuaSostituzione(idMalattia.trim(), matricolaSostituto);
 
                 if (successo) {
