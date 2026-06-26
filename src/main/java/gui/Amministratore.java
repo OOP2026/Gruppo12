@@ -266,7 +266,17 @@ public class Amministratore {
     }
 
     private void logout() {
-        SessionNavigation.logoutAndShowLogin(panel, controller);
+        int choice = JOptionPane.showConfirmDialog(panel, "Tornare alla pagina di login?", "Logout", JOptionPane.YES_NO_OPTION);
+        if (choice != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        Window currentWindow = SwingUtilities.getWindowAncestor(panel);
+        if (currentWindow != null) {
+            currentWindow.dispose();
+        }
+
+        login.showLogin(controller);
     }
 
     

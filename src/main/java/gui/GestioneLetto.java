@@ -128,7 +128,7 @@ public class GestioneLetto {
 
                 boolean occupato = controller.lettoOccupato(value.getMatricolaLetto());
                 String stanza = value.getStanza() != null ? String.valueOf(value.getStanza().getNumeroStanza()) : "?";
-                label.setText("Letto " + value.getMatricolaLetto() + " - stanza " + stanza);
+                label.setText("Letto: " + value.getMatricolaLetto() + " - stanza " + stanza);
 
                 if (!isSelected) {
                     label.setForeground(occupato ? new Color(180, 0, 0) : new Color(0, 110, 60));
