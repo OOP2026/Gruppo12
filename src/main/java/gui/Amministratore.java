@@ -35,7 +35,7 @@ public class Amministratore {
     private JList<String> dimissioniList;
     private JButton apriGestioneLettiButton;
     private JButton assegnaMalattiaButton;
-    private JButton suggerisciSostitutiButton;
+    private JButton suggerisciSostitutoButton;
     private JButton logoutButton;
 
     private DefaultListModel<String> dimissioniListModel;
@@ -70,7 +70,7 @@ public class Amministratore {
         cercaDimissioniButton.addActionListener(e -> cercaDimissioni());
         apriGestioneLettiButton.addActionListener(e -> apriGestioneLetti());
         assegnaMalattiaButton.addActionListener(e -> assegnaMalattiaMedico());
-        suggerisciSostitutiButton.addActionListener(e -> suggerisciSostituti());
+        suggerisciSostitutoButton.addActionListener(e -> suggerisciSostituto());
         logoutButton.addActionListener(e -> logout());
     }
 
@@ -112,14 +112,14 @@ public class Amministratore {
         }
     }
 
-    private void suggerisciSostituti() {
+    private void suggerisciSostituto() {
         String idMalattia = JOptionPane.showInputDialog(panel, "ID malattia:");
         if (idMalattia == null || idMalattia.trim().isEmpty()) {
             mostraAvviso("ID malattia non valido.");
             return;
         }
 
-        List<model.Medico> suggeriti = controller.suggerisciSostituti(idMalattia.trim());
+        List<model.Medico> suggeriti = controller.suggerisciSostituto(idMalattia.trim());
         if (suggeriti.isEmpty()) {
             mostraAvviso("Nessun sostituto disponibile per la malattia indicata.");
             return;
@@ -422,9 +422,9 @@ public class Amministratore {
         assegnaMalattiaButton = new JButton();
         assegnaMalattiaButton.setText("Assegna malattia a medico");
         panel5.add(assegnaMalattiaButton, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        suggerisciSostitutiButton = new JButton();
-        suggerisciSostitutiButton.setText("Suggerisci sostituti");
-        panel5.add(suggerisciSostitutiButton, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        suggerisciSostitutoButton = new JButton();
+        suggerisciSostitutoButton.setText("Suggerisci sostituto");
+        panel5.add(suggerisciSostitutoButton, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         logoutButton = new JButton();
         logoutButton.setText("Logout");
         panel5.add(logoutButton, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));

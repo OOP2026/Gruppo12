@@ -163,7 +163,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void testSuggerisciSostituti() {
+    public void testSuggerisciSostituto() {
         Controller c = new Controller();
         Reparto rep = new Reparto("Chir"); c.aggiungiReparto(rep);
         Medico m1 = new Medico("u1","p1","M1"); m1.setReparto(rep); rep.addMedico(m1); c.aggiungiMedico(m1);
@@ -173,13 +173,13 @@ public class ControllerTest {
         LocalDateTime end = start.plusDays(3);
         boolean assigned = c.assegnaMalattiaMedico("M1","malA", start, end);
         assertTrue(assigned);
-        System.out.println("testSuggerisciSostituti - malattia assegnata: " + assigned);
+        System.out.println("testSuggerisciSostituto - malattia assegnata: " + assigned);
 
         List<Medico> suggeriti = c.suggerisciSostituto("malA");
         // m2 should be suggested (no turni or prestazioni)
         boolean ok = false; for (Medico m : suggeriti) if (m.getMatricolaMedico().equals("M2")) ok = true;
         assertTrue(ok);
-        System.out.println("testSuggerisciSostituti - suggeriti: " + suggeriti.size());
+        System.out.println("testSuggerisciSostituto - suggeriti: " + suggeriti.size());
         for (Medico medico : suggeriti) {
             System.out.println("  medico: " + medico.getMatricolaMedico());
         }

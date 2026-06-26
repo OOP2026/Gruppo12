@@ -675,7 +675,7 @@ public class Controller {
         return result;
     }
 
-    public List<Medico> suggerisciSostituti(String idMalattia) {
+    public List<Medico> suggerisciSostituto(String idMalattia) {
         // Cerca i medici adatti a sostituire il medico assente.
         List<Medico> suggeriti = new ArrayList<>();
         if (idMalattia == null || idMalattia.isBlank()) {
@@ -730,11 +730,6 @@ public class Controller {
             }
         }
         return true;
-    }
-
-    public List<Medico> suggerisciSostituto(String idMalattia) {
-        // Mantiene un nome alternativo per compatibilità.
-        return suggerisciSostituti(idMalattia);
     }
 
     public boolean effettuaSostituzione(String idMalattia, String matricolaSostituto) {
