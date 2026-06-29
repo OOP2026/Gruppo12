@@ -135,36 +135,20 @@ public class Amministratore {
 
         JList<MedicoSostitutoView> lista = new JList<>(suggerimentiModel);
         lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        lista.setSelectedIndex(0);
         lista.setVisibleRowCount(Math.min(8, suggerimentiModel.size()));
 
         JScrollPane scrollPane = new JScrollPane(lista);
         scrollPane.setPreferredSize(new Dimension(380, Math.min(220, 40 + suggerimentiModel.size() * 24)));
 
-        // Usiamo showConfirmDialog per avere i pulsanti OK e Annulla e catturare l'azione
-        int option = JOptionPane.showConfirmDialog(
+        // Mostra solo la lista dei medici disponibili senza effettuare alcuna operazione
+        JOptionPane.showMessageDialog(
                 panel,
                 scrollPane,
-                "Seleziona un sostituto per " + idMalattia.trim(),
-                JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE
+                "Medici disponibili per sostituire " + idMalattia.trim(),
+                JOptionPane.INFORMATION_MESSAGE
         );
 
-        if (option == JOptionPane.OK_OPTION) {
-            MedicoSostitutoView selezionato = lista.getSelectedValue();
-            if (selezionato != null) {
-                String matricolaSostituto = selezionato.getMatricolaMedico();
-                boolean successo = controller.effettuaSostituzione(idMalattia.trim(), matricolaSostituto);
-
-                if (successo) {
-                    aggiornaStato("Sostituzione effettuata con il medico: " + matricolaSostituto);
-                } else {
-                    mostraAvviso("Errore durante la sostituzione delle prestazioni.");
-                }
-            } else {
-                mostraAvviso("Nessun medico selezionato.");
-            }
-        }
+        aggiornaStato("Visualizzati " + suggeriti.size() + " sostituti disponibili per malattia " + idMalattia.trim());
     }
     private void aggiungiPaziente() {
         String matricola = leggi(pazienteMatricolaField);
