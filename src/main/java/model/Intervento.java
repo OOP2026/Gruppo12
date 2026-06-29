@@ -18,6 +18,10 @@ public class Intervento extends Prestazione {
     public void setSalaOperatoria(Integer salaOperatoria) {
         this.salaOperatoria = salaOperatoria;
     }
-}
 
+    @Override
+    protected String descrizioneTipo() {
+        return "Intervento sala " + salaOperatoria;
+    }
+}
 

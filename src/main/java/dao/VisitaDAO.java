@@ -1,17 +1,16 @@
 package dao;
 
-import model.Visita;
-
 import java.util.List;
+import java.util.Map;
 
 public interface VisitaDAO {
-	void insertVisita(Visita visita);
+	void insertVisita(Map<String, Object> visita);
 
-	Visita getVisitaById(int numPrestazione);
+	Map<String, Object> getVisitaById(int numPrestazione);
 
-	List<Visita> getAllVisite();
+	List<Map<String, Object>> getAllVisite();
 
-	void updateVisita(Visita visita);
+	void updateVisita(Map<String, Object> visita);
 
 	void deleteVisita(int numPrestazione);
 }

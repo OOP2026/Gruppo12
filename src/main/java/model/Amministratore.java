@@ -58,4 +58,9 @@ public class Amministratore extends Utente {
     public List<Malattia> getListaMalattie() {
         return listaMalattie;
     }
+
+    @Override
+    public String toString() {
+        return matricolaAmministratore + " - " + getLogin();
+    }
 }

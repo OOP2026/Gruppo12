@@ -1,17 +1,16 @@
 package dao;
 
-import model.Ricovero;
-
 import java.util.List;
+import java.util.Map;
 
 public interface RicoveroDAO {
-	void insertRicovero(Ricovero ricovero);
+	void insertRicovero(Map<String, Object> ricovero);
 
-	Ricovero getRicoveroById(String codiceRicovero);
+	Map<String, Object> getRicoveroById(String codiceRicovero);
 
-	List<Ricovero> getAllRicoveri();
+	List<Map<String, Object>> getAllRicoveri();
 
-	void updateRicovero(Ricovero ricovero);
+	void updateRicovero(Map<String, Object> ricovero);
 
 	void deleteRicovero(String codiceRicovero);
 }

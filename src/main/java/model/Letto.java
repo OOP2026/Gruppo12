@@ -43,4 +43,10 @@ public class Letto {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        String stanzaNumero = stanza != null ? String.valueOf(stanza.getNumeroStanza()) : "?";
+        return "Letto " + matricolaLetto + " - stanza " + stanzaNumero;
+    }
 }

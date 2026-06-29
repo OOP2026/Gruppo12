@@ -1,17 +1,16 @@
 package dao;
 
-import model.Intervento;
-
 import java.util.List;
+import java.util.Map;
 
 public interface InterventoDAO {
-	void insertIntervento(Intervento intervento);
+	void insertIntervento(Map<String, Object> intervento);
 
-	Intervento getInterventoById(int numPrestazione);
+	Map<String, Object> getInterventoById(int numPrestazione);
 
-	List<Intervento> getAllInterventi();
+	List<Map<String, Object>> getAllInterventi();
 
-	void updateIntervento(Intervento intervento);
+	void updateIntervento(Map<String, Object> intervento);
 
 	void deleteIntervento(int numPrestazione);
 }

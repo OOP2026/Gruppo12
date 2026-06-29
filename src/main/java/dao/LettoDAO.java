@@ -1,17 +1,16 @@
 package dao;
 
-import model.Letto;
-
 import java.util.List;
+import java.util.Map;
 
 public interface LettoDAO {
-	void insertLetto(Letto letto);
+	void insertLetto(Map<String, Object> letto);
 
-	Letto getLettoById(String matricolaLetto);
+	Map<String, Object> getLettoById(String matricolaLetto);
 
-	List<Letto> getAllLetti();
+	List<Map<String, Object>> getAllLetti();
 
-	void updateLetto(Letto letto);
+	void updateLetto(Map<String, Object> letto);
 
 	void deleteLetto(String matricolaLetto);
 }

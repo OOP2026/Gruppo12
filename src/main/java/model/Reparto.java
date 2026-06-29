@@ -55,4 +55,9 @@ public class Reparto {
     public List<Stanza> getStanze() {
         return stanze;
     }
+
+    @Override
+    public String toString() {
+        return nomeReparto;
+    }
  }

@@ -45,4 +45,10 @@ public class Stanza {
     public List<Letto> getLetti() {
         return letti;
     }
+
+    @Override
+    public String toString() {
+        String repartoNome = reparto != null ? reparto.getNomeReparto() : "?";
+        return "Stanza " + numeroStanza + " - reparto " + repartoNome;
+    }
 }

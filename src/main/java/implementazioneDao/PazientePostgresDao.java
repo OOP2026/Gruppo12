@@ -1,26 +1,27 @@
 package implementazioneDao;
 
 import dao.PazienteDAO;
-import model.Paziente;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PazientePostgresDao extends AbstractPostgresDao implements PazienteDAO {
 
 	private static final String TABLE_PAZIENTE = "paziente";
 
 	@Override
-	public void insertPaziente(Paziente paziente) {
+	public void insertPaziente(Map<String, Object> paziente) {
 		String sql = "INSERT INTO " + TABLE_PAZIENTE + " (matricola_paziente, nome, cognome) VALUES (?, ?, ?)";
 		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
-			statement.setString(1, paziente.getMatricolaPaziente());
-			statement.setString(2, paziente.getNome());
-			statement.setString(3, paziente.getCognome());
+			statement.setString(1, (String) paziente.get("matricolaPaziente"));
+			statement.setString(2, (String) paziente.get("nome"));
+			statement.setString(3, (String) paziente.get("cognome"));
 			statement.executeUpdate();
 		} catch (SQLException exception) {
 			throw new IllegalStateException("Impossibile inserire il paziente", exception);
@@ -28,13 +29,17 @@ public class PazientePostgresDao extends AbstractPostgresDao implements Paziente
 	}
 
 	@Override
-	public Paziente getPazienteById(String matricolaPaziente) {
+	public Map<String, Object> getPazienteById(String matricolaPaziente) {
 		String sql = "SELECT matricola_paziente, nome, cognome FROM " + TABLE_PAZIENTE + " WHERE matricola_paziente = ?";
 		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, matricolaPaziente);
 			try (ResultSet resultSet = statement.executeQuery()) {
 				if (resultSet.next()) {
-					return new Paziente(resultSet.getString("matricola_paziente"), resultSet.getString("nome"), resultSet.getString("cognome"));
+					Map<String, Object> paziente = new HashMap<>();
+					paziente.put("matricolaPaziente", resultSet.getString("matricola_paziente"));
+					paziente.put("nome", resultSet.getString("nome"));
+					paziente.put("cognome", resultSet.getString("cognome"));
+					return paziente;
 				}
 			}
 		} catch (SQLException exception) {
@@ -44,12 +49,16 @@ public class PazientePostgresDao extends AbstractPostgresDao implements Paziente
 	}
 
 	@Override
-	public List<Paziente> getAllPazienti() {
-		List<Paziente> pazienti = new ArrayList<>();
+	public List<Map<String, Object>> getAllPazienti() {
+		List<Map<String, Object>> pazienti = new ArrayList<>();
 		String sql = "SELECT matricola_paziente, nome, cognome FROM " + TABLE_PAZIENTE + " ORDER BY matricola_paziente";
 		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql); ResultSet resultSet = statement.executeQuery()) {
 			while (resultSet.next()) {
-				pazienti.add(new Paziente(resultSet.getString("matricola_paziente"), resultSet.getString("nome"), resultSet.getString("cognome")));
+				Map<String, Object> paziente = new HashMap<>();
+				paziente.put("matricolaPaziente", resultSet.getString("matricola_paziente"));
+				paziente.put("nome", resultSet.getString("nome"));
+				paziente.put("cognome", resultSet.getString("cognome"));
+				pazienti.add(paziente);
 			}
 		} catch (SQLException exception) {
 			throw new IllegalStateException("Impossibile leggere i pazienti", exception);
@@ -58,12 +67,12 @@ public class PazientePostgresDao extends AbstractPostgresDao implements Paziente
 	}
 
 	@Override
-	public void updatePaziente(Paziente paziente) {
+	public void updatePaziente(Map<String, Object> paziente) {
 		String sql = "UPDATE " + TABLE_PAZIENTE + " SET nome = ?, cognome = ? WHERE matricola_paziente = ?";
 		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
-			statement.setString(1, paziente.getNome());
-			statement.setString(2, paziente.getCognome());
-			statement.setString(3, paziente.getMatricolaPaziente());
+			statement.setString(1, (String) paziente.get("nome"));
+			statement.setString(2, (String) paziente.get("cognome"));
+			statement.setString(3, (String) paziente.get("matricolaPaziente"));
 			statement.executeUpdate();
 		} catch (SQLException exception) {
 			throw new IllegalStateException("Impossibile aggiornare il paziente", exception);

@@ -1,17 +1,16 @@
 package dao;
 
-import model.Malattia;
-
 import java.util.List;
+import java.util.Map;
 
 public interface MalattiaDAO {
-	void insertMalattia(Malattia malattia);
+	void insertMalattia(Map<String, Object> malattia);
 
-	Malattia getMalattiaById(String idMalattia);
+	Map<String, Object> getMalattiaById(String idMalattia);
 
-	List<Malattia> getAllMalattie();
+	List<Map<String, Object>> getAllMalattie();
 
-	void updateMalattia(Malattia malattia);
+	void updateMalattia(Map<String, Object> malattia);
 
 	void deleteMalattia(String idMalattia);
 }

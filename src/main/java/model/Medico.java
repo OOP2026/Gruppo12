@@ -89,6 +89,11 @@ public class Medico extends Utente {
     public void setMatricolaMedico(String matricolaMedico) {
         this.matricolaMedico = matricolaMedico;
     }
-}
 
+    @Override
+    public String toString() {
+        String repartoNome = reparto != null ? reparto.getNomeReparto() : "?";
+        return matricolaMedico + " - " + getLogin() + " - reparto " + repartoNome;
+    }
+}
 

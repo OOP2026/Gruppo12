@@ -1,10 +1,13 @@
 package model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Prestazione {
+    private static final DateTimeFormatter DISPLAY_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
     private Integer numPrestazione;
     private LocalDateTime dataInizio;
     private LocalDateTime dataFine;
@@ -65,5 +68,16 @@ public abstract class Prestazione {
 
     public void setEsito(String esito) {
         this.esito = esito;
+    }
+
+    protected String descrizioneTipo() {
+        return "Prestazione";
+    }
+
+    @Override
+    public String toString() {
+        String esitoDescrizione = esito != null ? esito : "N/D";
+        return "#" + numPrestazione + " - " + descrizioneTipo() + " - "
+                + dataInizio.format(DISPLAY_FORMATTER) + " - esito " + esitoDescrizione;
     }
 }

@@ -1,17 +1,16 @@
 package dao;
 
-import model.Medico;
-
 import java.util.List;
+import java.util.Map;
 
 public interface MedicoDAO {
-	void insertMedico(Medico medico);
+	void insertMedico(Map<String, Object> medico);
 
-	Medico getMedicoById(String matricolaMedico);
+	Map<String, Object> getMedicoById(String matricolaMedico);
 
-	List<Medico> getAllMedici();
+	List<Map<String, Object>> getAllMedici();
 
-	void updateMedico(Medico medico);
+	void updateMedico(Map<String, Object> medico);
 
 	void deleteMedico(String matricolaMedico);
 }

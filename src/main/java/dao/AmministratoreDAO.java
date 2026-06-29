@@ -1,17 +1,16 @@
 package dao;
 
-import model.Amministratore;
-
 import java.util.List;
+import java.util.Map;
 
 public interface AmministratoreDAO {
-	void insertAmministratore(Amministratore amministratore);
+	void insertAmministratore(Map<String, Object> amministratore);
 
-	Amministratore getAmministratoreById(String matricolaAmministratore);
+	Map<String, Object> getAmministratoreById(String matricolaAmministratore);
 
-	List<Amministratore> getAllAmministratori();
+	List<Map<String, Object>> getAllAmministratori();
 
-	void updateAmministratore(Amministratore amministratore);
+	void updateAmministratore(Map<String, Object> amministratore);
 
 	void deleteAmministratore(String matricolaAmministratore);
 }

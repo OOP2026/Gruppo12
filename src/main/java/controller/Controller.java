@@ -27,13 +27,95 @@ import model.*;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Gestisce i dati dell'app e le regole di business.
  * Carica lo stato dal database e fornisce i metodi usati dalle viste.
  */
 public class Controller {
+    public enum RuoloUtente {
+        AMMINISTRATORE,
+        MEDICO,
+        ALTRO
+    }
+
+    public static final class MedicoSostitutoView {
+        private final String matricolaMedico;
+        private final String login;
+        private final String nomeReparto;
+
+        public MedicoSostitutoView(String matricolaMedico, String login, String nomeReparto) {
+            this.matricolaMedico = matricolaMedico;
+            this.login = login;
+            this.nomeReparto = nomeReparto;
+        }
+
+        public String getMatricolaMedico() {
+            return matricolaMedico;
+        }
+
+        @Override
+        public String toString() {
+            String reparto = nomeReparto != null ? nomeReparto : "?";
+            return matricolaMedico + " - " + login + " - reparto " + reparto;
+        }
+    }
+
+    public static final class LettoView {
+        private final String matricolaLetto;
+        private final Integer numeroStanza;
+        private final boolean occupato;
+
+        public LettoView(String matricolaLetto, Integer numeroStanza, boolean occupato) {
+            this.matricolaLetto = matricolaLetto;
+            this.numeroStanza = numeroStanza;
+            this.occupato = occupato;
+        }
+
+        public String getMatricolaLetto() {
+            return matricolaLetto;
+        }
+
+        public boolean isOccupato() {
+            return occupato;
+        }
+
+        @Override
+        public String toString() {
+            String stanza = numeroStanza != null ? String.valueOf(numeroStanza) : "?";
+            return "Letto " + matricolaLetto + " - stanza " + stanza;
+        }
+    }
+
+    public static final class PrestazioneView {
+        private final String descrizione;
+
+        public PrestazioneView(String descrizione) {
+            this.descrizione = descrizione;
+        }
+
+        @Override
+        public String toString() {
+            return descrizione;
+        }
+    }
+
+    public static final class RicoveroView {
+        private final String descrizione;
+
+        public RicoveroView(String descrizione) {
+            this.descrizione = descrizione;
+        }
+
+        @Override
+        public String toString() {
+            return descrizione;
+        }
+    }
+
     private static final String DEFAULT_ADMIN = "admin";
 
     // DAO usati per leggere e scrivere i dati nel database.
@@ -67,10 +149,216 @@ public class Controller {
         caricaDatiPersistentiDalDatabase();
     }
 
+    private Map<String, Object> utenteData(Utente utente) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("login", utente.getLogin());
+        data.put("password", utente.getPassword());
+        return data;
+    }
+
+    private Map<String, Object> amministratoreData(Amministratore amministratore) {
+        Map<String, Object> data = utenteData(amministratore);
+        data.put("matricolaAmministratore", amministratore.getMatricolaAmministratore());
+        return data;
+    }
+
+    private Map<String, Object> medicoData(Medico medico) {
+        Map<String, Object> data = utenteData(medico);
+        data.put("matricolaMedico", medico.getMatricolaMedico());
+        data.put("nomeReparto", medico.getReparto() != null ? medico.getReparto().getNomeReparto() : null);
+        return data;
+    }
+
+    private Map<String, Object> pazienteData(Paziente paziente) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("matricolaPaziente", paziente.getMatricolaPaziente());
+        data.put("nome", paziente.getNome());
+        data.put("cognome", paziente.getCognome());
+        return data;
+    }
+
+    private Map<String, Object> repartoData(Reparto reparto) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("nomeReparto", reparto.getNomeReparto());
+        return data;
+    }
+
+    private Map<String, Object> stanzaData(Stanza stanza) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("numeroStanza", stanza.getNumeroStanza());
+        data.put("nomeReparto", stanza.getReparto() != null ? stanza.getReparto().getNomeReparto() : null);
+        return data;
+    }
+
+    private Map<String, Object> lettoData(Letto letto) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("matricolaLetto", letto.getMatricolaLetto());
+        data.put("numeroStanza", letto.getStanza() != null ? letto.getStanza().getNumeroStanza() : null);
+        return data;
+    }
+
+    private Map<String, Object> turnoData(TurnoLavorativo turno) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("idTurno", turno.getIdTurno());
+        data.put("inizioTurno", turno.getInizioTurno());
+        data.put("fineTurno", turno.getFineTurno());
+        return data;
+    }
+
+    private Map<String, Object> ricoveroData(Ricovero ricovero) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("codiceRicovero", ricovero.getCodiceRicovero());
+        data.put("dataAmmissione", ricovero.getDataAmmissione());
+        data.put("dataDimissione", ricovero.getDataDimissione());
+        data.put("matricolaPaziente", ricovero.getPazienteAssegnato() != null ? ricovero.getPazienteAssegnato().getMatricolaPaziente() : null);
+        data.put("matricolaLetto", ricovero.getLettoAssegnato() != null ? ricovero.getLettoAssegnato().getMatricolaLetto() : null);
+        return data;
+    }
+
+    private Map<String, Object> malattiaData(Malattia malattia) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("idMalattia", malattia.getIdMalattia());
+        data.put("dataInizio", malattia.getDataInizio());
+        data.put("dataFine", malattia.getDataFine());
+        data.put("matricolaMedico", malattia.getMedicoAssegnato() != null ? malattia.getMedicoAssegnato().getMatricolaMedico() : null);
+        data.put("matricolaAmministratore", malattia.getAmministratoreAssegnato() != null ? malattia.getAmministratoreAssegnato().getMatricolaAmministratore() : null);
+        return data;
+    }
+
+    private Map<String, Object> prestazioneData(Prestazione prestazione) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("numPrestazione", prestazione.getNumPrestazione());
+        data.put("dataInizio", prestazione.getDataInizio());
+        data.put("dataFine", prestazione.getDataFine());
+        data.put("esito", prestazione.getEsito());
+        data.put("tipo", prestazione.getClass().getSimpleName().toUpperCase());
+        data.put("codiceRicovero", prestazione.getRicoveroAssegnato() != null ? prestazione.getRicoveroAssegnato().getCodiceRicovero() : null);
+        if (prestazione instanceof Intervento) {
+            data.put("salaOperatoria", ((Intervento) prestazione).getSalaOperatoria());
+        } else if (prestazione instanceof Visita) {
+            data.put("tipoVisita", ((Visita) prestazione).getTipoVisita());
+        }
+        List<String> medici = new ArrayList<>();
+        for (Medico medico : prestazione.getMedici()) {
+            medici.add(medico.getMatricolaMedico());
+        }
+        data.put("medici", medici);
+        return data;
+    }
+
+    private Amministratore amministratoreFromData(Map<String, Object> data) {
+        return new Amministratore((String) data.get("login"), (String) data.get("password"), (String) data.get("matricolaAmministratore"));
+    }
+
+    private Medico medicoFromData(Map<String, Object> data) {
+        Medico medico = new Medico((String) data.get("login"), (String) data.get("password"), (String) data.get("matricolaMedico"));
+        String nomeReparto = (String) data.get("nomeReparto");
+        if (nomeReparto != null) {
+            Reparto reparto = trovaRepartoPerNome(nomeReparto);
+            if (reparto != null) {
+                medico.setReparto(reparto);
+            }
+        }
+        return medico;
+    }
+
+    private Paziente pazienteFromData(Map<String, Object> data) {
+        return new Paziente((String) data.get("matricolaPaziente"), (String) data.get("nome"), (String) data.get("cognome"));
+    }
+
+    private Reparto repartoFromData(Map<String, Object> data) {
+        return new Reparto((String) data.get("nomeReparto"));
+    }
+
+    private Stanza stanzaFromData(Map<String, Object> data) {
+        Stanza stanza = new Stanza((Integer) data.get("numeroStanza"));
+        String nomeReparto = (String) data.get("nomeReparto");
+        if (nomeReparto != null) {
+            stanza.setReparto(trovaRepartoPerNome(nomeReparto));
+        }
+        return stanza;
+    }
+
+    private Letto lettoFromData(Map<String, Object> data) {
+        Letto letto = new Letto((String) data.get("matricolaLetto"));
+        Integer numeroStanza = (Integer) data.get("numeroStanza");
+        if (numeroStanza != null) {
+            letto.setStanza(trovaStanzaPerNumero(numeroStanza));
+        }
+        return letto;
+    }
+
+    private TurnoLavorativo turnoFromData(Map<String, Object> data) {
+        return new TurnoLavorativo((String) data.get("idTurno"), (LocalDateTime) data.get("inizioTurno"), (LocalDateTime) data.get("fineTurno"));
+    }
+
+    private Ricovero ricoveroFromData(Map<String, Object> data) {
+        Ricovero ricovero = new Ricovero((LocalDateTime) data.get("dataAmmissione"), (LocalDateTime) data.get("dataDimissione"), (String) data.get("codiceRicovero"));
+        String matricolaPaziente = (String) data.get("matricolaPaziente");
+        if (matricolaPaziente != null) {
+            ricovero.setPaziente(trovaPazientePerMatricola(matricolaPaziente));
+        }
+        String matricolaLetto = (String) data.get("matricolaLetto");
+        if (matricolaLetto != null) {
+            ricovero.setLetto(trovaLettoPerMatricola(matricolaLetto));
+        }
+        return ricovero;
+    }
+
+    private Malattia malattiaFromData(Map<String, Object> data) {
+        Malattia malattia = new Malattia((String) data.get("idMalattia"), (LocalDateTime) data.get("dataInizio"), (LocalDateTime) data.get("dataFine"));
+        String matricolaMedico = (String) data.get("matricolaMedico");
+        if (matricolaMedico != null) {
+            malattia.setMedico(trovaMedicoPerMatricola(matricolaMedico));
+        }
+        String matricolaAmministratore = (String) data.get("matricolaAmministratore");
+        if (matricolaAmministratore != null) {
+            for (Utente utente : listaUtenti) {
+                if (utente instanceof Amministratore && ((Amministratore) utente).getMatricolaAmministratore().equals(matricolaAmministratore)) {
+                    malattia.setAmministratore((Amministratore) utente);
+                    break;
+                }
+            }
+        }
+        return malattia;
+    }
+
+    private Prestazione prestazioneFromData(Map<String, Object> data) {
+        String tipo = (String) data.get("tipo");
+        Integer numPrestazione = (Integer) data.get("numPrestazione");
+        LocalDateTime dataInizio = (LocalDateTime) data.get("dataInizio");
+        LocalDateTime dataFine = (LocalDateTime) data.get("dataFine");
+        String esito = (String) data.get("esito");
+        Prestazione prestazione;
+        if ("INTERVENTO".equalsIgnoreCase(tipo)) {
+            prestazione = new Intervento(numPrestazione, dataInizio, dataFine, esito, (Integer) data.get("salaOperatoria"));
+        } else if ("VISITA".equalsIgnoreCase(tipo)) {
+            prestazione = new Visita(numPrestazione, dataInizio, dataFine, esito, (String) data.get("tipoVisita"));
+        } else {
+            return null;
+        }
+
+        String codiceRicovero = (String) data.get("codiceRicovero");
+        if (codiceRicovero != null) {
+            prestazione.setRicovero(trovaRicoveroPerCodice(codiceRicovero));
+        }
+
+        Object mediciObj = data.get("medici");
+        if (mediciObj instanceof List) {
+            for (Object matricola : (List<?>) mediciObj) {
+                Medico medico = trovaMedicoPerMatricola((String) matricola);
+                if (medico != null) {
+                    prestazione.addMedico(medico);
+                }
+            }
+        }
+        return prestazione;
+    }
+
     private void sincronizzaUtentiPredefinitiSulDatabase() {
         // Inserisce l'admin base solo se manca.
         if (utenteDAO.getUtenteById(DEFAULT_ADMIN) == null) {
-            amministratoreDAO.insertAmministratore(new Amministratore(DEFAULT_ADMIN, DEFAULT_ADMIN, "AMM1"));
+            amministratoreDAO.insertAmministratore(amministratoreData(new Amministratore(DEFAULT_ADMIN, DEFAULT_ADMIN, "AMM1")));
         }
     }
 
@@ -90,21 +378,15 @@ public class Controller {
         listaMedici.clear();
 
         // Gli amministratori vengono caricati come utenti.
-        for (Amministratore amministratore : amministratoreDAO.getAllAmministratori()) {
-            listaUtenti.add(amministratore);
+        for (Map<String, Object> amministratore : amministratoreDAO.getAllAmministratori()) {
+            listaUtenti.add(amministratoreFromData(amministratore));
         }
 
         // I medici vengono ricollegati al reparto.
-        for (Medico medico : medicoDAO.getAllMedici()) {
-            String nomeReparto = medico.getReparto() != null ? medico.getReparto().getNomeReparto() : null;
-            if (nomeReparto != null) {
-                Reparto reparto = trovaRepartoPerNome(nomeReparto);
-                if (reparto != null) {
-                    medico.setReparto(reparto);
-                    if (!reparto.getMedici().contains(medico)) {
-                        reparto.addMedico(medico);
-                    }
-                }
+        for (Map<String, Object> medicoData : medicoDAO.getAllMedici()) {
+            Medico medico = medicoFromData(medicoData);
+            if (medico.getReparto() != null && !medico.getReparto().getMedici().contains(medico)) {
+                medico.getReparto().addMedico(medico);
             }
             listaUtenti.add(medico);
             listaMedici.add(medico);
@@ -117,16 +399,20 @@ public class Controller {
         listaLetti.clear();
 
         // Carica i reparti.
-        listaReparti.addAll(repartoDAO.getAllReparti());
+        for (Map<String, Object> repartoData : repartoDAO.getAllReparti()) {
+            listaReparti.add(repartoFromData(repartoData));
+        }
 
         // Carica le stanze e collega il reparto corretto.
-        for (Stanza stanza : stanzaDAO.getAllStanze()) {
+        for (Map<String, Object> stanzaData : stanzaDAO.getAllStanze()) {
+            Stanza stanza = stanzaFromData(stanzaData);
             associaRepartoAStanza(stanza);
             listaStanze.add(stanza);
         }
 
         // Carica i letti e collega la stanza corretta.
-        for (Letto letto : lettoDAO.getAllLetti()) {
+        for (Map<String, Object> lettoData : lettoDAO.getAllLetti()) {
+            Letto letto = lettoFromData(lettoData);
             associaStanzaALetto(letto);
             listaLetti.add(letto);
         }
@@ -170,33 +456,34 @@ public class Controller {
     private void caricaPazientiDalDatabase() {
         listaPazienti.clear();
 
-        for (Paziente paziente : pazienteDAO.getAllPazienti()) {
-            listaPazienti.add(paziente);
+        for (Map<String, Object> pazienteData : pazienteDAO.getAllPazienti()) {
+            listaPazienti.add(pazienteFromData(pazienteData));
         }
     }
 
     private void caricaTurniDalDatabase() {
         listaTurniLavorativi.clear();
         // I turni servono prima di collegarli ai medici.
-        listaTurniLavorativi.addAll(turnoLavorativoDAO.getAllTurniLavorativi());
+        for (Map<String, Object> turnoData : turnoLavorativoDAO.getAllTurniLavorativi()) {
+            listaTurniLavorativi.add(turnoFromData(turnoData));
+        }
     }
 
     private void caricaRicoveriDalDatabase() {
         listaRicoveri.clear();
         // Ricollega ogni ricovero a paziente e letto in memoria.
-        for (Ricovero ricovero : ricoveroDAO.getAllRicoveri()) {
-            Paziente paziente = ricovero.getPazienteAssegnato() != null ? trovaPazientePerMatricola(ricovero.getPazienteAssegnato().getMatricolaPaziente()) : null;
-            Letto letto = ricovero.getLettoAssegnato() != null ? trovaLettoPerMatricola(ricovero.getLettoAssegnato().getMatricolaLetto()) : null;
+        for (Map<String, Object> ricoveroData : ricoveroDAO.getAllRicoveri()) {
+            Ricovero ricovero = ricoveroFromData(ricoveroData);
+            Paziente paziente = ricovero.getPazienteAssegnato();
+            Letto letto = ricovero.getLettoAssegnato();
 
             if (paziente != null) {
-                ricovero.setPaziente(paziente);
                 if (!paziente.getListaRicoveri().contains(ricovero)) {
                     paziente.addRicovero(ricovero);
                 }
             }
 
             if (letto != null) {
-                ricovero.setLetto(letto);
                 if (!letto.getRicoveri().contains(ricovero)) {
                     letto.addRicovero(ricovero);
                 }
@@ -209,28 +496,21 @@ public class Controller {
     private void caricaPrestazioniDalDatabase() {
         listaPrestazioni.clear();
         // Ricollega ogni prestazione ai medici e al ricovero.
-        for (Prestazione prestazione : prestazioneDAO.getAllPrestazioni()) {
+        for (Map<String, Object> prestazioneData : prestazioneDAO.getAllPrestazioni()) {
+            Prestazione prestazione = prestazioneFromData(prestazioneData);
             if (prestazione == null) {
                 continue;
             }
 
-            List<Medico> mediciCaricati = new ArrayList<>(prestazione.getMedici());
-            prestazione.getMedici().clear();
-            for (Medico medicoCaricato : mediciCaricati) {
-                Medico medico = trovaMedicoPerMatricola(medicoCaricato.getMatricolaMedico());
-                if (medico != null) {
+            for (Medico medico : new ArrayList<>(prestazione.getMedici())) {
+                if (!medico.getListaPrestazioni().contains(prestazione)) {
                     medico.addPrestazione(prestazione);
                 }
             }
 
-            Ricovero ricovero = prestazione.getRicoveroAssegnato() != null
-                    ? trovaRicoveroPerCodice(prestazione.getRicoveroAssegnato().getCodiceRicovero())
-                    : null;
-            if (ricovero != null) {
-                prestazione.setRicovero(ricovero);
-                if (!ricovero.getListaPrestazioni().contains(prestazione)) {
-                    ricovero.addPrestazione(prestazione);
-                }
+            Ricovero ricovero = prestazione.getRicoveroAssegnato();
+            if (ricovero != null && !ricovero.getListaPrestazioni().contains(prestazione)) {
+                ricovero.addPrestazione(prestazione);
             }
             listaPrestazioni.add(prestazione);
         }
@@ -342,7 +622,7 @@ public class Controller {
             malattia.setMedico(medico);
             medico.addMalattia(malattia);
             listaMalattie.add(malattia);
-            malattiaDAO.insertMalattia(malattia);
+            malattiaDAO.insertMalattia(malattiaData(malattia));
             return true;
         }
         return false;
@@ -358,7 +638,7 @@ public class Controller {
 
         Paziente p = new Paziente(matricolaPaziente, nome, cognome);
         listaPazienti.add(p);
-        pazienteDAO.insertPaziente(p);
+        pazienteDAO.insertPaziente(pazienteData(p));
         return true;
     }
 
@@ -405,7 +685,7 @@ public class Controller {
         lettoTrovato.addRicovero(r);
 
         listaRicoveri.add(r);
-        ricoveroDAO.insertRicovero(r);
+        ricoveroDAO.insertRicovero(ricoveroData(r));
         return true;
     }
 
@@ -459,7 +739,7 @@ public class Controller {
 
 
                         r.setDataDimissione(LocalDateTime.now());
-                        ricoveroDAO.updateRicovero(r);
+                        ricoveroDAO.updateRicovero(ricoveroData(r));
 
                         return true;
                     } else {
@@ -476,7 +756,7 @@ public class Controller {
         // Inserisce un medico solo se la matricola non esiste già.
         for (Medico m : listaMedici) if (m.getMatricolaMedico().equals(medico.getMatricolaMedico())) return false;
         listaMedici.add(medico);
-        medicoDAO.insertMedico(medico);
+        medicoDAO.insertMedico(medicoData(medico));
         return true;
     }
 
@@ -484,7 +764,7 @@ public class Controller {
         // Inserisce un reparto solo se il nome non è già presente.
         for (Reparto r : listaReparti) if (r.getNomeReparto().equals(reparto.getNomeReparto())) return false;
         listaReparti.add(reparto);
-        repartoDAO.insertReparto(reparto);
+        repartoDAO.insertReparto(repartoData(reparto));
         return true;
     }
 
@@ -492,7 +772,7 @@ public class Controller {
         // Inserisce una stanza solo se il numero non è già usato.
         for (Stanza s : listaStanze) if (s.getNumeroStanza().equals(stanza.getNumeroStanza())) return false;
         listaStanze.add(stanza);
-        stanzaDAO.insertStanza(stanza);
+        stanzaDAO.insertStanza(stanzaData(stanza));
         return true;
     }
 
@@ -500,7 +780,7 @@ public class Controller {
         // Inserisce un letto solo se la matricola non è già presente.
         for (Letto l : listaLetti) if (l.getMatricolaLetto().equals(letto.getMatricolaLetto())) return false;
         listaLetti.add(letto);
-        lettoDAO.insertLetto(letto);
+        lettoDAO.insertLetto(lettoData(letto));
         return true;
     }
 
@@ -508,7 +788,7 @@ public class Controller {
         // Inserisce un turno solo se l'id non è già presente.
         for (TurnoLavorativo t : listaTurniLavorativi) if (t.getIdTurno().equals(turno.getIdTurno())) return false;
         listaTurniLavorativi.add(turno);
-        turnoLavorativoDAO.insertTurnoLavorativo(turno);
+        turnoLavorativoDAO.insertTurnoLavorativo(turnoData(turno));
         return true;
     }
 
@@ -559,7 +839,7 @@ public class Controller {
         Visita v = new Visita(numPrestazione, dataInizio, dataFine, esito, tipoVisita);
         v.setRicovero(ricovero);
         medico.addPrestazione(v);
-        prestazioneDAO.insertPrestazione(v);
+        prestazioneDAO.insertPrestazione(prestazioneData(v));
         ricovero.addPrestazione(v);
         listaPrestazioni.add(v);
         return true;
@@ -582,7 +862,7 @@ public class Controller {
         Intervento it = new Intervento(numPrestazione, dataInizio, dataFine, esito, salaOperatoria);
         it.setRicovero(ricovero);
         medico.addPrestazione(it);
-        prestazioneDAO.insertPrestazione(it);
+        prestazioneDAO.insertPrestazione(prestazioneData(it));
         ricovero.addPrestazione(it);
         listaPrestazioni.add(it);
         return true;
@@ -593,7 +873,7 @@ public class Controller {
         for (Prestazione p : listaPrestazioni) {
             if (p.getNumPrestazione().equals(numPrestazione)) {
                 p.setEsito(esito);
-                prestazioneDAO.updatePrestazione(p);
+                prestazioneDAO.updatePrestazione(prestazioneData(p));
                 return true;
             }
         }
@@ -612,6 +892,14 @@ public class Controller {
         return result;
     }
 
+    public List<PrestazioneView> agendaGiornalieraView(String matricolaMedico, LocalDate giorno) {
+        List<PrestazioneView> views = new ArrayList<>();
+        for (Prestazione prestazione : agendaGiornaliera(matricolaMedico, giorno)) {
+            views.add(new PrestazioneView(prestazione.toString()));
+        }
+        return views;
+    }
+
     public List<Prestazione> agendaSettimanale(String matricolaMedico, LocalDate inizioSettimana) {
         // Restituisce le prestazioni del medico nella settimana indicata.
         List<Prestazione> result = new ArrayList<>();
@@ -624,6 +912,14 @@ public class Controller {
             }
         }
         return result;
+    }
+
+    public List<PrestazioneView> agendaSettimanaleView(String matricolaMedico, LocalDate inizioSettimana) {
+        List<PrestazioneView> views = new ArrayList<>();
+        for (Prestazione prestazione : agendaSettimanale(matricolaMedico, inizioSettimana)) {
+            views.add(new PrestazioneView(prestazione.toString()));
+        }
+        return views;
     }
 
     public List<Letto> cercaLettiDisponibili(String nomeReparto) {
@@ -675,6 +971,14 @@ public class Controller {
         return result;
     }
 
+    public List<RicoveroView> dimissioniInDataView(LocalDate data) {
+        List<RicoveroView> views = new ArrayList<>();
+        for (Ricovero ricovero : dimissioniInData(data)) {
+            views.add(new RicoveroView(ricovero.toString()));
+        }
+        return views;
+    }
+
     public List<Medico> suggerisciSostituto(String idMalattia) {
         // Cerca i medici adatti a sostituire il medico assente.
         List<Medico> suggeriti = new ArrayList<>();
@@ -682,7 +986,7 @@ public class Controller {
             return suggeriti;
         }
 
-        Malattia mal = malattiaDAO.getMalattiaById(idMalattia);
+        Malattia mal = malattiaFromData(malattiaDAO.getMalattiaById(idMalattia));
         if (mal == null) {
             return suggeriti;
         }
@@ -708,6 +1012,38 @@ public class Controller {
         }
 
         return suggeriti;
+    }
+
+    public List<MedicoSostitutoView> suggerisciSostitutoView(String idMalattia) {
+        List<MedicoSostitutoView> suggeriti = new ArrayList<>();
+        for (Medico medico : suggerisciSostituto(idMalattia)) {
+            String reparto = medico.getReparto() != null ? medico.getReparto().getNomeReparto() : null;
+            suggeriti.add(new MedicoSostitutoView(medico.getMatricolaMedico(), medico.getLogin(), reparto));
+        }
+        return suggeriti;
+    }
+
+    public RuoloUtente determinaRuolo(Utente utente) {
+        if (utente instanceof Amministratore) {
+            return RuoloUtente.AMMINISTRATORE;
+        }
+        if (utente instanceof Medico) {
+            return RuoloUtente.MEDICO;
+        }
+        return RuoloUtente.ALTRO;
+    }
+
+    public boolean lettoOccupato(Letto letto) {
+        return letto != null && lettoOccupato(letto.getMatricolaLetto());
+    }
+
+    public List<LettoView> cercaLettiPerRepartoView(String nomeReparto) {
+        List<LettoView> views = new ArrayList<>();
+        for (Letto letto : cercaLettiPerReparto(nomeReparto)) {
+            Integer numeroStanza = letto.getStanza() != null ? letto.getStanza().getNumeroStanza() : null;
+            views.add(new LettoView(letto.getMatricolaLetto(), numeroStanza, isLettoOccupato(letto)));
+        }
+        return views;
     }
 
     private Medico ottieniMedicoAssente(Malattia mal) {
@@ -738,7 +1074,8 @@ public class Controller {
 
         Malattia mal = trovaMalattiaPerId(idMalattia);
         if (mal == null) {
-            mal = malattiaDAO.getMalattiaById(idMalattia);
+            Map<String, Object> malData = malattiaDAO.getMalattiaById(idMalattia);
+            mal = malData != null ? malattiaFromData(malData) : null;
         }
         if (mal == null || mal.getMedicoAssegnato() == null) return false;
 
@@ -752,7 +1089,7 @@ public class Controller {
             assente.removeMalattia(mal);
         }
         sostituto.addMalattia(mal);
-        malattiaDAO.updateMalattia(mal);
+        malattiaDAO.updateMalattia(malattiaData(mal));
 
         LocalDateTime start = mal.getDataInizio();
         LocalDateTime end = mal.getDataFine();

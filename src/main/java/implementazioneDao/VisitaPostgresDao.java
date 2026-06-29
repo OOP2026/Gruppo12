@@ -1,45 +1,40 @@
 package implementazioneDao;
 
 import dao.VisitaDAO;
-import model.Visita;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class VisitaPostgresDao extends AbstractPostgresDao implements VisitaDAO {
 
 	@Override
-	public void insertVisita(Visita visita) {
+	public void insertVisita(Map<String, Object> visita) {
 		new PrestazionePostgresDao().insertPrestazione(visita);
 	}
 
 	@Override
-	public Visita getVisitaById(int numPrestazione) {
-
-		model.Prestazione prestazione = new PrestazionePostgresDao().getPrestazioneById(numPrestazione);
-
-
-		if (prestazione instanceof model.Visita) {
-			return (model.Visita) prestazione;
+	public Map<String, Object> getVisitaById(int numPrestazione) {
+		Map<String, Object> prestazione = new PrestazionePostgresDao().getPrestazioneById(numPrestazione);
+		if (prestazione != null && "VISITA".equalsIgnoreCase((String) prestazione.get("tipo"))) {
+			return prestazione;
 		}
-
-
 		return null;
 	}
 
 	@Override
-	public List<Visita> getAllVisite() {
-		List<Visita> visite = new ArrayList<>();
-		for (model.Prestazione prestazione : new PrestazionePostgresDao().getAllPrestazioni()) {
-			if (prestazione instanceof Visita) {
-				visite.add((Visita) prestazione);
+	public List<Map<String, Object>> getAllVisite() {
+		List<Map<String, Object>> visite = new ArrayList<>();
+		for (Map<String, Object> prestazione : new PrestazionePostgresDao().getAllPrestazioni()) {
+			if ("VISITA".equalsIgnoreCase((String) prestazione.get("tipo"))) {
+				visite.add(prestazione);
 			}
 		}
 		return visite;
 	}
 
 	@Override
-	public void updateVisita(Visita visita) {
+	public void updateVisita(Map<String, Object> visita) {
 		new PrestazionePostgresDao().updatePrestazione(visita);
 	}
 

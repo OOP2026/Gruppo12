@@ -84,4 +84,11 @@ public class Ricovero {
     public void setCodiceRicovero(String codiceRicovero) {
         this.codiceRicovero = codiceRicovero;
     }
+
+    @Override
+    public String toString() {
+        String matricolaPaziente = pazienteAssegnato != null ? pazienteAssegnato.getMatricolaPaziente() : "?";
+        String matricolaLetto = lettoAssegnato != null ? lettoAssegnato.getMatricolaLetto() : "?";
+        return "Ricovero " + codiceRicovero + " - paziente " + matricolaPaziente + " - letto " + matricolaLetto;
+    }
 }

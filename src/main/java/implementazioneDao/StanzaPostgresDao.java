@@ -1,30 +1,26 @@
 package implementazioneDao;
 
 import dao.StanzaDAO;
-import model.Stanza;
-import model.Reparto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class StanzaPostgresDao extends AbstractPostgresDao implements StanzaDAO {
 
 	private static final String TABLE_STANZA = "stanza";
 
 	@Override
-	public void insertStanza(Stanza stanza) {
+	public void insertStanza(Map<String, Object> stanza) {
 		String sql = "INSERT INTO " + TABLE_STANZA + " (numero_stanza, reparto_nome) VALUES (?, ?)";
 		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
-			statement.setInt(1, stanza.getNumeroStanza());
-			if (stanza.getReparto() == null) {
-				statement.setString(2, null);
-			} else {
-				statement.setString(2, stanza.getReparto().getNomeReparto());
-			}
+			statement.setInt(1, (Integer) stanza.get("numeroStanza"));
+			statement.setString(2, (String) stanza.get("nomeReparto"));
 			statement.executeUpdate();
 		} catch (SQLException exception) {
 			throw new IllegalStateException("Impossibile inserire la stanza", exception);
@@ -32,17 +28,15 @@ public class StanzaPostgresDao extends AbstractPostgresDao implements StanzaDAO 
 	}
 
 	@Override
-	public Stanza getStanzaById(int numeroStanza) {
+	public Map<String, Object> getStanzaById(int numeroStanza) {
 		String sql = "SELECT numero_stanza, reparto_nome FROM " + TABLE_STANZA + " WHERE numero_stanza = ?";
 		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setInt(1, numeroStanza);
 			try (ResultSet resultSet = statement.executeQuery()) {
 				if (resultSet.next()) {
-					Stanza stanza = new Stanza(resultSet.getInt("numero_stanza"));
-					String repartoNome = resultSet.getString("reparto_nome");
-					if (repartoNome != null) {
-						stanza.setReparto(new Reparto(repartoNome));
-					}
+					Map<String, Object> stanza = new HashMap<>();
+					stanza.put("numeroStanza", resultSet.getInt("numero_stanza"));
+					stanza.put("nomeReparto", resultSet.getString("reparto_nome"));
 					return stanza;
 				}
 			}
@@ -53,16 +47,14 @@ public class StanzaPostgresDao extends AbstractPostgresDao implements StanzaDAO 
 	}
 
 	@Override
-	public List<Stanza> getAllStanze() {
-		List<Stanza> stanze = new ArrayList<>();
+	public List<Map<String, Object>> getAllStanze() {
+		List<Map<String, Object>> stanze = new ArrayList<>();
 		String sql = "SELECT numero_stanza, reparto_nome FROM " + TABLE_STANZA + " ORDER BY numero_stanza";
 		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql); ResultSet resultSet = statement.executeQuery()) {
 			while (resultSet.next()) {
-				Stanza stanza = new Stanza(resultSet.getInt("numero_stanza"));
-				String repartoNome = resultSet.getString("reparto_nome");
-				if (repartoNome != null) {
-					stanza.setReparto(new Reparto(repartoNome));
-				}
+				Map<String, Object> stanza = new HashMap<>();
+				stanza.put("numeroStanza", resultSet.getInt("numero_stanza"));
+				stanza.put("nomeReparto", resultSet.getString("reparto_nome"));
 				stanze.add(stanza);
 			}
 		} catch (SQLException exception) {
@@ -72,15 +64,11 @@ public class StanzaPostgresDao extends AbstractPostgresDao implements StanzaDAO 
 	}
 
 	@Override
-	public void updateStanza(Stanza stanza) {
+	public void updateStanza(Map<String, Object> stanza) {
 		String sql = "UPDATE " + TABLE_STANZA + " SET reparto_nome = ? WHERE numero_stanza = ?";
 		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
-			if (stanza.getReparto() == null) {
-				statement.setString(1, null);
-			} else {
-				statement.setString(1, stanza.getReparto().getNomeReparto());
-			}
-			statement.setInt(2, stanza.getNumeroStanza());
+			statement.setString(1, (String) stanza.get("nomeReparto"));
+			statement.setInt(2, (Integer) stanza.get("numeroStanza"));
 			statement.executeUpdate();
 		} catch (SQLException exception) {
 			throw new IllegalStateException("Impossibile aggiornare la stanza", exception);

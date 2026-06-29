@@ -1,17 +1,16 @@
 package dao;
 
-import model.TurnoLavorativo;
-
 import java.util.List;
+import java.util.Map;
 
 public interface TurnoLavorativoDAO {
-	void insertTurnoLavorativo(TurnoLavorativo turnoLavorativo);
+	void insertTurnoLavorativo(Map<String, Object> turnoLavorativo);
 
-	TurnoLavorativo getTurnoLavorativoById(String idTurno);
+	Map<String, Object> getTurnoLavorativoById(String idTurno);
 
-	List<TurnoLavorativo> getAllTurniLavorativi();
+	List<Map<String, Object>> getAllTurniLavorativi();
 
-	void updateTurnoLavorativo(TurnoLavorativo turnoLavorativo);
+	void updateTurnoLavorativo(Map<String, Object> turnoLavorativo);
 
 	void deleteTurnoLavorativo(String idTurno);
 }

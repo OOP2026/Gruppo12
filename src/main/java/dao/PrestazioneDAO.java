@@ -1,17 +1,17 @@
 package dao;
 
-import model.Prestazione;
-
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public interface PrestazioneDAO {
-	void insertPrestazione(Prestazione prestazione);
+	void insertPrestazione(Map<String, Object> prestazione);
 
-	Prestazione getPrestazioneById(int numPrestazione);
+	Map<String, Object> getPrestazioneById(int numPrestazione);
 
-	List<Prestazione> getAllPrestazioni();
+	List<Map<String, Object>> getAllPrestazioni();
 
-	void updatePrestazione(Prestazione prestazione);
+	void updatePrestazione(Map<String, Object> prestazione);
 
 	void deletePrestazione(int numPrestazione);
 

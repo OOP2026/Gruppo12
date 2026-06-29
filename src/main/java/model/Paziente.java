@@ -54,4 +54,9 @@ public class Paziente {
     public List<Ricovero> getListaRicoveri() {
         return listaRicoveri;
     }
+
+    @Override
+    public String toString() {
+        return matricolaPaziente + " - " + nome + " " + cognome;
+    }
 }

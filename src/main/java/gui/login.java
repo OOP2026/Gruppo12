@@ -1,7 +1,6 @@
 package gui;
 
 import controller.Controller;
-import model.Utente;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
@@ -53,13 +52,14 @@ public class login {
                 return;
             }
 
-            Utente utenteLoggato = controller.effettuaLogin(username, password);
+            var utenteLoggato = controller.effettuaLogin(username, password);
             if (utenteLoggato == null) {
                 JOptionPane.showMessageDialog(panel, "Credenziali non valide.", "Accesso", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            apriDashboardPer(utenteLoggato);
+            Controller.RuoloUtente ruolo = controller.determinaRuolo(utenteLoggato);
+            apriDashboardPer(ruolo);
             chiudiFinestraCorrente();
         });
     }
@@ -75,13 +75,17 @@ public class login {
         }
     }
 
-    private void apriDashboardPer(Utente utenteLoggato) {
-        if (utenteLoggato instanceof model.Amministratore) {
-            apriFinestra(new gui.Amministratore(controller).getContentPane(), "Dashboard amministratore", new Dimension(860, 560));
-        } else if (utenteLoggato instanceof model.Medico) {
-            apriFinestra(new gui.Medico(controller).getContentPane(), "Dashboard medico", new Dimension(980, 640));
-        } else {
-            JOptionPane.showMessageDialog(panel, "Tipo utente non supportato.", "Accesso", JOptionPane.WARNING_MESSAGE);
+    private void apriDashboardPer(Controller.RuoloUtente ruolo) {
+        switch (ruolo) {
+            case AMMINISTRATORE:
+                apriFinestra(new gui.Amministratore(controller).getContentPane(), "Dashboard amministratore", new Dimension(860, 560));
+                break;
+            case MEDICO:
+                apriFinestra(new gui.Medico(controller).getContentPane(), "Dashboard medico", new Dimension(980, 640));
+                break;
+            default:
+                JOptionPane.showMessageDialog(panel, "Tipo utente non supportato.", "Accesso", JOptionPane.WARNING_MESSAGE);
+                break;
         }
     }
 

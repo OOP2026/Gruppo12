@@ -1,9 +1,6 @@
 package gui;
 
 import controller.Controller;
-import model.Intervento;
-import model.Prestazione;
-import model.Visita;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
@@ -163,7 +160,7 @@ public class Medico {
 
         try {
             LocalDate giorno = LocalDate.parse(data, DATE_FORMATTER);
-            List<Prestazione> agenda = controller.agendaGiornaliera(matricolaMedico, giorno);
+            List<Controller.PrestazioneView> agenda = controller.agendaGiornalieraView(matricolaMedico, giorno);
             caricaPrestazioni(agenda, "Nessuna prestazione in agenda per il giorno indicato.");
             aggiornaStato("Agenda giornaliera caricata per " + giorno.format(DATE_FORMATTER) + ".");
         } catch (DateTimeParseException ex) {
@@ -183,7 +180,7 @@ public class Medico {
         try {
             LocalDate giorno = LocalDate.parse(data, DATE_FORMATTER);
             LocalDate inizioSettimana = giorno.with(DayOfWeek.MONDAY);
-            List<Prestazione> agenda = controller.agendaSettimanale(matricolaMedico, inizioSettimana);
+            List<Controller.PrestazioneView> agenda = controller.agendaSettimanaleView(matricolaMedico, inizioSettimana);
             caricaPrestazioni(agenda, "Nessuna prestazione in agenda per la settimana indicata.");
             aggiornaStato("Agenda settimanale caricata da " + inizioSettimana.format(DATE_FORMATTER) + ".");
         } catch (DateTimeParseException ex) {
@@ -191,14 +188,14 @@ public class Medico {
         }
     }
 
-    private void caricaPrestazioni(List<Prestazione> prestazioni, String emptyMessage) {
+    private void caricaPrestazioni(List<Controller.PrestazioneView> prestazioni, String emptyMessage) {
         agendaListModel.clear();
         if (prestazioni.isEmpty()) {
             agendaListModel.addElement(emptyMessage);
             return;
         }
-        for (Prestazione prestazione : prestazioni) {
-            agendaListModel.addElement(descriviPrestazione(prestazione));
+        for (Controller.PrestazioneView prestazione : prestazioni) {
+            agendaListModel.addElement(prestazione.toString());
         }
     }
 
@@ -214,21 +211,6 @@ public class Medico {
         }
 
         login.showLogin(controller);
-    }
-
-    private String descriviPrestazione(Prestazione prestazione) {
-        String tipo;
-        if (prestazione instanceof Visita) {
-            tipo = "Visita " + ((Visita) prestazione).getTipoVisita();
-        } else if (prestazione instanceof Intervento) {
-            tipo = "Intervento sala " + ((Intervento) prestazione).getSalaOperatoria();
-        } else {
-            tipo = "Prestazione";
-        }
-
-        String esito = prestazione.getEsito() != null ? prestazione.getEsito() : "N/D";
-        return "#" + prestazione.getNumPrestazione() + " - " + tipo + " - " +
-                prestazione.getDataInizio().format(DATE_TIME_FORMATTER) + " - esito " + esito;
     }
 
     private String leggi(JTextField field) {

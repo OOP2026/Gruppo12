@@ -1,38 +1,29 @@
 package implementazioneDao;
 
 import dao.MalattiaDAO;
-import model.Amministratore;
-import model.Medico;
-import model.Malattia;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MalattiaPostgresDao extends AbstractPostgresDao implements MalattiaDAO {
 
 	private static final String TABLE_MALATTIA = "malattia";
 
 	@Override
-	public void insertMalattia(Malattia malattia) {
+	public void insertMalattia(Map<String, Object> malattia) {
 		String sql = "INSERT INTO " + TABLE_MALATTIA + " (id_malattia, data_inizio, data_fine, matricola_medico, matricola_amministratore) VALUES (?, ?, ?, ?, ?)";
 		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
-			statement.setString(1, malattia.getIdMalattia());
-			statement.setTimestamp(2, toTimestamp(malattia.getDataInizio()));
-			statement.setTimestamp(3, toTimestamp(malattia.getDataFine()));
-			if (malattia.getMedicoAssegnato() == null) {
-				statement.setString(4, null);
-			} else {
-				statement.setString(4, malattia.getMedicoAssegnato().getMatricolaMedico());
-			}
-			if (malattia.getAmministratoreAssegnato() == null) {
-				statement.setString(5, null);
-			} else {
-				statement.setString(5, malattia.getAmministratoreAssegnato().getMatricolaAmministratore());
-			}
+			statement.setString(1, (String) malattia.get("idMalattia"));
+			statement.setTimestamp(2, toTimestamp((java.time.LocalDateTime) malattia.get("dataInizio")));
+			statement.setTimestamp(3, toTimestamp((java.time.LocalDateTime) malattia.get("dataFine")));
+			statement.setString(4, (String) malattia.get("matricolaMedico"));
+			statement.setString(5, (String) malattia.get("matricolaAmministratore"));
 			statement.executeUpdate();
 		} catch (SQLException exception) {
 			throw new IllegalStateException("Impossibile inserire la malattia", exception);
@@ -40,23 +31,18 @@ public class MalattiaPostgresDao extends AbstractPostgresDao implements Malattia
 	}
 
 	@Override
-	public Malattia getMalattiaById(String idMalattia) {
+	public Map<String, Object> getMalattiaById(String idMalattia) {
 		String sql = "SELECT id_malattia, data_inizio, data_fine, matricola_medico, matricola_amministratore FROM " + TABLE_MALATTIA + " WHERE id_malattia = ?";
 		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, idMalattia);
 			try (ResultSet resultSet = statement.executeQuery()) {
 				if (resultSet.next()) {
-					Malattia malattia = new Malattia(resultSet.getString("id_malattia"), toLocalDateTime(resultSet.getTimestamp("data_inizio")), toLocalDateTime(resultSet.getTimestamp("data_fine")));
-					String matricolaMedico = resultSet.getString("matricola_medico");
-					if (matricolaMedico != null) {
-						Medico medico = new MedicoPostgresDao().getMedicoById(matricolaMedico);
-						malattia.setMedico(medico);
-					}
-					String matricolaAmministratore = resultSet.getString("matricola_amministratore");
-					if (matricolaAmministratore != null) {
-						Amministratore amministratore = new AmministratorePostgresDao().getAmministratoreById(matricolaAmministratore);
-						malattia.setAmministratore(amministratore);
-					}
+					Map<String, Object> malattia = new HashMap<>();
+					malattia.put("idMalattia", resultSet.getString("id_malattia"));
+					malattia.put("dataInizio", toLocalDateTime(resultSet.getTimestamp("data_inizio")));
+					malattia.put("dataFine", toLocalDateTime(resultSet.getTimestamp("data_fine")));
+					malattia.put("matricolaMedico", resultSet.getString("matricola_medico"));
+					malattia.put("matricolaAmministratore", resultSet.getString("matricola_amministratore"));
 					return malattia;
 				}
 			}
@@ -67,20 +53,17 @@ public class MalattiaPostgresDao extends AbstractPostgresDao implements Malattia
 	}
 
 	@Override
-	public List<Malattia> getAllMalattie() {
-		List<Malattia> malattie = new ArrayList<>();
+	public List<Map<String, Object>> getAllMalattie() {
+		List<Map<String, Object>> malattie = new ArrayList<>();
 		String sql = "SELECT id_malattia, data_inizio, data_fine, matricola_medico, matricola_amministratore FROM " + TABLE_MALATTIA + " ORDER BY id_malattia";
 		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql); ResultSet resultSet = statement.executeQuery()) {
 			while (resultSet.next()) {
-				Malattia malattia = new Malattia(resultSet.getString("id_malattia"), toLocalDateTime(resultSet.getTimestamp("data_inizio")), toLocalDateTime(resultSet.getTimestamp("data_fine")));
-				String matricolaMedico = resultSet.getString("matricola_medico");
-				if (matricolaMedico != null) {
-					malattia.setMedico(new MedicoPostgresDao().getMedicoById(matricolaMedico));
-				}
-				String matricolaAmministratore = resultSet.getString("matricola_amministratore");
-				if (matricolaAmministratore != null) {
-					malattia.setAmministratore(new AmministratorePostgresDao().getAmministratoreById(matricolaAmministratore));
-				}
+				Map<String, Object> malattia = new HashMap<>();
+				malattia.put("idMalattia", resultSet.getString("id_malattia"));
+				malattia.put("dataInizio", toLocalDateTime(resultSet.getTimestamp("data_inizio")));
+				malattia.put("dataFine", toLocalDateTime(resultSet.getTimestamp("data_fine")));
+				malattia.put("matricolaMedico", resultSet.getString("matricola_medico"));
+				malattia.put("matricolaAmministratore", resultSet.getString("matricola_amministratore"));
 				malattie.add(malattia);
 			}
 		} catch (SQLException exception) {
@@ -90,22 +73,14 @@ public class MalattiaPostgresDao extends AbstractPostgresDao implements Malattia
 	}
 
 	@Override
-	public void updateMalattia(Malattia malattia) {
+	public void updateMalattia(Map<String, Object> malattia) {
 		String sql = "UPDATE " + TABLE_MALATTIA + " SET data_inizio = ?, data_fine = ?, matricola_medico = ?, matricola_amministratore = ? WHERE id_malattia = ?";
 		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
-			statement.setTimestamp(1, toTimestamp(malattia.getDataInizio()));
-			statement.setTimestamp(2, toTimestamp(malattia.getDataFine()));
-			if (malattia.getMedicoAssegnato() == null) {
-				statement.setString(3, null);
-			} else {
-				statement.setString(3, malattia.getMedicoAssegnato().getMatricolaMedico());
-			}
-			if (malattia.getAmministratoreAssegnato() == null) {
-				statement.setString(4, null);
-			} else {
-				statement.setString(4, malattia.getAmministratoreAssegnato().getMatricolaAmministratore());
-			}
-			statement.setString(5, malattia.getIdMalattia());
+			statement.setTimestamp(1, toTimestamp((java.time.LocalDateTime) malattia.get("dataInizio")));
+			statement.setTimestamp(2, toTimestamp((java.time.LocalDateTime) malattia.get("dataFine")));
+			statement.setString(3, (String) malattia.get("matricolaMedico"));
+			statement.setString(4, (String) malattia.get("matricolaAmministratore"));
+			statement.setString(5, (String) malattia.get("idMalattia"));
 			statement.executeUpdate();
 		} catch (SQLException exception) {
 			throw new IllegalStateException("Impossibile aggiornare la malattia", exception);

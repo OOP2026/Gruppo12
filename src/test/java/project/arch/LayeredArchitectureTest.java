@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
 import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
 
 @RunWith(ArchUnitRunner.class)
-@AnalyzeClasses(packages = ".")
+@AnalyzeClasses(packages = {"controller", "dao", "gui", "implementazioneDao", "model"})
 public class LayeredArchitectureTest {
     @ArchTest
     public static final ArchRule layer_dependencies_are_respected = layeredArchitecture()

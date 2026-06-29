@@ -1,18 +1,14 @@
 package implementazioneDao;
 
 import dao.PrestazioneDAO;
-import model.Intervento;
-import model.Medico;
-import model.Ricovero;
-import model.Prestazione;
-import model.Visita;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PrestazionePostgresDao extends AbstractPostgresDao implements PrestazioneDAO {
 
@@ -22,26 +18,22 @@ public class PrestazionePostgresDao extends AbstractPostgresDao implements Prest
 	private static final String TABLE_MEDICO_PRESTAZIONE = "medico_prestazione";
 
 	@Override
-	public void insertPrestazione(Prestazione prestazione) {
-		String type = prestazione.getClass().getSimpleName().toUpperCase();
+	public void insertPrestazione(Map<String, Object> prestazione) {
+		String type = (String) prestazione.get("tipo");
 		String insertPrestazione = "INSERT INTO " + TABLE_PRESTAZIONE + " (num_prestazione, data_inizio, data_fine, esito, tipo, codice_ricovero) VALUES (?, ?, ?, ?, ?, ?)";
 		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(insertPrestazione)) {
-			statement.setInt(1, prestazione.getNumPrestazione());
-			statement.setTimestamp(2, toTimestamp(prestazione.getDataInizio()));
-			statement.setTimestamp(3, toTimestamp(prestazione.getDataFine()));
-			statement.setString(4, prestazione.getEsito());
+			statement.setInt(1, (Integer) prestazione.get("numPrestazione"));
+			statement.setTimestamp(2, toTimestamp((java.time.LocalDateTime) prestazione.get("dataInizio")));
+			statement.setTimestamp(3, toTimestamp((java.time.LocalDateTime) prestazione.get("dataFine")));
+			statement.setString(4, (String) prestazione.get("esito"));
 			statement.setString(5, type);
-			if (prestazione.getRicoveroAssegnato() == null) {
-				statement.setString(6, null);
-			} else {
-				statement.setString(6, prestazione.getRicoveroAssegnato().getCodiceRicovero());
-			}
+			statement.setString(6, (String) prestazione.get("codiceRicovero"));
 			statement.executeUpdate();
 
-			if (prestazione instanceof Intervento) {
-				insertInterventoDetails(connection, (Intervento) prestazione);
-			} else if (prestazione instanceof Visita) {
-				insertVisitaDetails(connection, (Visita) prestazione);
+			if ("INTERVENTO".equalsIgnoreCase(type)) {
+				insertInterventoDetails(connection, prestazione);
+			} else if ("VISITA".equalsIgnoreCase(type)) {
+				insertVisitaDetails(connection, prestazione);
 			}
 
 			insertMediciPrestazione(connection, prestazione);
@@ -51,7 +43,7 @@ public class PrestazionePostgresDao extends AbstractPostgresDao implements Prest
 	}
 
 	@Override
-	public Prestazione getPrestazioneById(int numPrestazione) {
+	public Map<String, Object> getPrestazioneById(int numPrestazione) {
 		String sql = "SELECT num_prestazione, data_inizio, data_fine, esito, tipo, codice_ricovero FROM " + TABLE_PRESTAZIONE + " WHERE num_prestazione = ?";
 		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setInt(1, numPrestazione);
@@ -67,8 +59,8 @@ public class PrestazionePostgresDao extends AbstractPostgresDao implements Prest
 	}
 
 	@Override
-	public List<Prestazione> getAllPrestazioni() {
-		List<Prestazione> prestazioni = new ArrayList<>();
+	public List<Map<String, Object>> getAllPrestazioni() {
+		List<Map<String, Object>> prestazioni = new ArrayList<>();
 		String sql = "SELECT num_prestazione, data_inizio, data_fine, esito, tipo, codice_ricovero FROM " + TABLE_PRESTAZIONE + " ORDER BY num_prestazione";
 		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql); ResultSet resultSet = statement.executeQuery()) {
 			while (resultSet.next()) {
@@ -81,26 +73,22 @@ public class PrestazionePostgresDao extends AbstractPostgresDao implements Prest
 	}
 
 	@Override
-	public void updatePrestazione(Prestazione prestazione) {
-		String type = prestazione.getClass().getSimpleName().toUpperCase();
+	public void updatePrestazione(Map<String, Object> prestazione) {
+		String type = (String) prestazione.get("tipo");
 		String updatePrestazione = "UPDATE " + TABLE_PRESTAZIONE + " SET data_inizio = ?, data_fine = ?, esito = ?, tipo = ?, codice_ricovero = ? WHERE num_prestazione = ?";
 		try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(updatePrestazione)) {
-			statement.setTimestamp(1, toTimestamp(prestazione.getDataInizio()));
-			statement.setTimestamp(2, toTimestamp(prestazione.getDataFine()));
-			statement.setString(3, prestazione.getEsito());
+			statement.setTimestamp(1, toTimestamp((java.time.LocalDateTime) prestazione.get("dataInizio")));
+			statement.setTimestamp(2, toTimestamp((java.time.LocalDateTime) prestazione.get("dataFine")));
+			statement.setString(3, (String) prestazione.get("esito"));
 			statement.setString(4, type);
-			if (prestazione.getRicoveroAssegnato() == null) {
-				statement.setString(5, null);
-			} else {
-				statement.setString(5, prestazione.getRicoveroAssegnato().getCodiceRicovero());
-			}
-			statement.setInt(6, prestazione.getNumPrestazione());
+			statement.setString(5, (String) prestazione.get("codiceRicovero"));
+			statement.setInt(6, (Integer) prestazione.get("numPrestazione"));
 			statement.executeUpdate();
 
-			if (prestazione instanceof Intervento) {
-				updateInterventoDetails(connection, (Intervento) prestazione);
-			} else if (prestazione instanceof Visita) {
-				updateVisitaDetails(connection, (Visita) prestazione);
+			if ("INTERVENTO".equalsIgnoreCase(type)) {
+				updateInterventoDetails(connection, prestazione);
+			} else if ("VISITA".equalsIgnoreCase(type)) {
+				updateVisitaDetails(connection, prestazione);
 			}
 		} catch (SQLException exception) {
 			throw new IllegalStateException("Impossibile aggiornare la prestazione", exception);
@@ -146,34 +134,23 @@ public class PrestazionePostgresDao extends AbstractPostgresDao implements Prest
 		}
 	}
 
-	private Prestazione mapPrestazione(Connection connection, ResultSet resultSet) throws SQLException {
+	private Map<String, Object> mapPrestazione(Connection connection, ResultSet resultSet) throws SQLException {
 		String type = resultSet.getString("tipo");
 		int numPrestazione = resultSet.getInt("num_prestazione");
-		Prestazione prestazione;
-		if ("INTERVENTO".equalsIgnoreCase(type)) {
-			prestazione = loadIntervento(connection, resultSet, numPrestazione);
-		} else if ("VISITA".equalsIgnoreCase(type)) {
-			prestazione = loadVisita(connection, resultSet, numPrestazione);
-		} else {
-			prestazione = null;
-		}
-
-		if (prestazione != null) {
-			String codiceRicovero = resultSet.getString("codice_ricovero");
-			if (codiceRicovero != null) {
-				Ricovero ricovero = new RicoveroPostgresDao().getRicoveroById(codiceRicovero);
-				prestazione.setRicovero(ricovero);
-			}
-
-			for (Medico medico : loadMedici(connection, numPrestazione)) {
-				prestazione.addMedico(medico);
-			}
-		}
+		Map<String, Object> prestazione = new HashMap<>();
+		prestazione.put("numPrestazione", numPrestazione);
+		prestazione.put("dataInizio", toLocalDateTime(resultSet.getTimestamp("data_inizio")));
+		prestazione.put("dataFine", toLocalDateTime(resultSet.getTimestamp("data_fine")));
+		prestazione.put("esito", resultSet.getString("esito"));
+		prestazione.put("tipo", type);
+		prestazione.put("codiceRicovero", resultSet.getString("codice_ricovero"));
+		prestazione.putAll(loadSubtypeDetails(connection, type, numPrestazione));
+		prestazione.put("medici", loadMedici(connection, numPrestazione));
 		return prestazione;
 	}
 
-	private List<Medico> loadMedici(Connection connection, int numPrestazione) throws SQLException {
-		List<Medico> medici = new ArrayList<>();
+	private List<String> loadMedici(Connection connection, int numPrestazione) throws SQLException {
+		List<String> medici = new ArrayList<>();
 		String sql = "SELECT u.login, u.password, m.matricola_medico, m.reparto_nome FROM " + TABLE_MEDICO_PRESTAZIONE + " mp " +
 				"JOIN medico m ON m.matricola_medico = mp.matricola_medico " +
 				"JOIN utente u ON u.login = m.login " +
@@ -182,93 +159,84 @@ public class PrestazionePostgresDao extends AbstractPostgresDao implements Prest
 			statement.setInt(1, numPrestazione);
 			try (ResultSet resultSet = statement.executeQuery()) {
 				while (resultSet.next()) {
-					Medico medico = new Medico(resultSet.getString("login"), resultSet.getString("password"), resultSet.getString("matricola_medico"));
-					String repartoNome = resultSet.getString("reparto_nome");
-					if (repartoNome != null) {
-						medico.setReparto(new model.Reparto(repartoNome));
-					}
-					medici.add(medico);
+					medici.add(resultSet.getString("matricola_medico"));
 				}
 			}
 		}
 		return medici;
 	}
 
-	private Prestazione loadIntervento(Connection connection, ResultSet resultSet, int numPrestazione) throws SQLException {
-		String sql = "SELECT sala_operatoria FROM " + TABLE_INTERVENTO + " WHERE num_prestazione = ?";
-		try (PreparedStatement statement = connection.prepareStatement(sql)) {
-			statement.setInt(1, numPrestazione);
-			try (ResultSet subtypeResult = statement.executeQuery()) {
-				if (subtypeResult.next()) {
-					return new Intervento(resultSet.getInt("num_prestazione"), toLocalDateTime(resultSet.getTimestamp("data_inizio")), toLocalDateTime(resultSet.getTimestamp("data_fine")), resultSet.getString("esito"), subtypeResult.getInt("sala_operatoria"));
+	private Map<String, Object> loadSubtypeDetails(Connection connection, String type, int numPrestazione) throws SQLException {
+		Map<String, Object> details = new HashMap<>();
+		if ("INTERVENTO".equalsIgnoreCase(type)) {
+			String sql = "SELECT sala_operatoria FROM " + TABLE_INTERVENTO + " WHERE num_prestazione = ?";
+			try (PreparedStatement statement = connection.prepareStatement(sql)) {
+				statement.setInt(1, numPrestazione);
+				try (ResultSet subtypeResult = statement.executeQuery()) {
+					if (subtypeResult.next()) {
+						details.put("salaOperatoria", subtypeResult.getInt("sala_operatoria"));
+					}
+				}
+			}
+		} else if ("VISITA".equalsIgnoreCase(type)) {
+			String sql = "SELECT tipo_visita FROM " + TABLE_VISITA + " WHERE num_prestazione = ?";
+			try (PreparedStatement statement = connection.prepareStatement(sql)) {
+				statement.setInt(1, numPrestazione);
+				try (ResultSet subtypeResult = statement.executeQuery()) {
+					if (subtypeResult.next()) {
+						details.put("tipoVisita", subtypeResult.getString("tipo_visita"));
+					}
 				}
 			}
 		}
-		return null;
+		return details;
 	}
 
-	private Prestazione loadVisita(Connection connection, ResultSet resultSet, int numPrestazione) throws SQLException {
-		String sql = "SELECT tipo_visita FROM " + TABLE_VISITA + " WHERE num_prestazione = ?";
-		try (PreparedStatement statement = connection.prepareStatement(sql)) {
-			statement.setInt(1, numPrestazione);
-			try (ResultSet subtypeResult = statement.executeQuery()) {
-				if (subtypeResult.next()) {
-					return new Visita(resultSet.getInt("num_prestazione"), toLocalDateTime(resultSet.getTimestamp("data_inizio")), toLocalDateTime(resultSet.getTimestamp("data_fine")), resultSet.getString("esito"), subtypeResult.getString("tipo_visita"));
-				}
-			}
-		}
-		return null;
-	}
-
-	private void insertInterventoDetails(Connection connection, Intervento intervento) throws SQLException {
-		String sql = "INSERT INTO " + TABLE_INTERVENTO + " (num_prestazione, sala_operatoria) VALUES (?, ?)";
-		try (PreparedStatement statement = connection.prepareStatement(sql)) {
-			statement.setInt(1, intervento.getNumPrestazione());
-			statement.setInt(2, intervento.getSalaOperatoria());
+	private void insertInterventoDetails(Connection connection, Map<String, Object> prestazione) throws SQLException {
+		try (PreparedStatement statement = connection.prepareStatement("INSERT INTO " + TABLE_INTERVENTO + " (num_prestazione, sala_operatoria) VALUES (?, ?)")) {
+			statement.setInt(1, (Integer) prestazione.get("numPrestazione"));
+			statement.setInt(2, (Integer) prestazione.get("salaOperatoria"));
 			statement.executeUpdate();
 		}
 	}
 
-	private void insertVisitaDetails(Connection connection, Visita visita) throws SQLException {
-		String sql = "INSERT INTO " + TABLE_VISITA + " (num_prestazione, tipo_visita) VALUES (?, ?)";
-		try (PreparedStatement statement = connection.prepareStatement(sql)) {
-			statement.setInt(1, visita.getNumPrestazione());
-			statement.setString(2, visita.getTipoVisita());
+	private void insertVisitaDetails(Connection connection, Map<String, Object> prestazione) throws SQLException {
+		try (PreparedStatement statement = connection.prepareStatement("INSERT INTO " + TABLE_VISITA + " (num_prestazione, tipo_visita) VALUES (?, ?)")) {
+			statement.setInt(1, (Integer) prestazione.get("numPrestazione"));
+			statement.setString(2, (String) prestazione.get("tipoVisita"));
 			statement.executeUpdate();
 		}
 	}
 
-	private void updateInterventoDetails(Connection connection, Intervento intervento) throws SQLException {
-		String update = "UPDATE " + TABLE_INTERVENTO + " SET sala_operatoria = ? WHERE num_prestazione = ?";
-		try (PreparedStatement statement = connection.prepareStatement(update)) {
-			statement.setInt(1, intervento.getSalaOperatoria());
-			statement.setInt(2, intervento.getNumPrestazione());
+	private void updateInterventoDetails(Connection connection, Map<String, Object> prestazione) throws SQLException {
+		try (PreparedStatement statement = connection.prepareStatement("UPDATE " + TABLE_INTERVENTO + " SET sala_operatoria = ? WHERE num_prestazione = ?")) {
+			statement.setInt(1, (Integer) prestazione.get("salaOperatoria"));
+			statement.setInt(2, (Integer) prestazione.get("numPrestazione"));
 			statement.executeUpdate();
 		}
 	}
 
-	private void updateVisitaDetails(Connection connection, Visita visita) throws SQLException {
-		String update = "UPDATE " + TABLE_VISITA + " SET tipo_visita = ? WHERE num_prestazione = ?";
-		try (PreparedStatement statement = connection.prepareStatement(update)) {
-			statement.setString(1, visita.getTipoVisita());
-			statement.setInt(2, visita.getNumPrestazione());
+	private void updateVisitaDetails(Connection connection, Map<String, Object> prestazione) throws SQLException {
+		try (PreparedStatement statement = connection.prepareStatement("UPDATE " + TABLE_VISITA + " SET tipo_visita = ? WHERE num_prestazione = ?")) {
+			statement.setString(1, (String) prestazione.get("tipoVisita"));
+			statement.setInt(2, (Integer) prestazione.get("numPrestazione"));
 			statement.executeUpdate();
 		}
 	}
 
-	private void insertMediciPrestazione(Connection connection, Prestazione prestazione) throws SQLException {
-		if (prestazione.getMedici().isEmpty()) {
+	private void insertMediciPrestazione(Connection connection, Map<String, Object> prestazione) throws SQLException {
+		Object mediciObj = prestazione.get("medici");
+		if (!(mediciObj instanceof List)) {
 			return;
 		}
-
-		String sql = "INSERT INTO " + TABLE_MEDICO_PRESTAZIONE + " (matricola_medico, num_prestazione) VALUES (?, ?)";
-		try (PreparedStatement statement = connection.prepareStatement(sql)) {
-			for (Medico medico : prestazione.getMedici()) {
-				if (medico.getMatricolaMedico() == null) {
-					continue;
-				}
-				statement.setString(1, medico.getMatricolaMedico());
-				statement.setInt(2, prestazione.getNumPrestazione());
+		List<?> medici = (List<?>) mediciObj;
+		if (medici.isEmpty()) {
+			return;
+		}
+		try (PreparedStatement statement = connection.prepareStatement("INSERT INTO " + TABLE_MEDICO_PRESTAZIONE + " (matricola_medico, num_prestazione) VALUES (?, ?)")) {
+			for (Object matricola : medici) {
+				statement.setString(1, (String) matricola);
+				statement.setInt(2, (Integer) prestazione.get("numPrestazione"));
 				statement.addBatch();
 			}
 			statement.executeBatch();

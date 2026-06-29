@@ -1,8 +1,7 @@
 package gui;
 
 import controller.Controller;
-import model.Paziente;
-import model.Ricovero;
+import controller.Controller.MedicoSostitutoView;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
@@ -119,28 +118,18 @@ public class Amministratore {
             return;
         }
 
-        List<model.Medico> suggeriti = controller.suggerisciSostituto(idMalattia.trim());
+        List<MedicoSostitutoView> suggeriti = controller.suggerisciSostitutoView(idMalattia.trim());
         if (suggeriti.isEmpty()) {
             mostraAvviso("Nessun sostituto disponibile per la malattia indicata.");
             return;
         }
 
-        DefaultListModel<model.Medico> suggerimentiModel = new DefaultListModel<>();
-        for (model.Medico medico : suggeriti) {
+        DefaultListModel<MedicoSostitutoView> suggerimentiModel = new DefaultListModel<>();
+        for (MedicoSostitutoView medico : suggeriti) {
             suggerimentiModel.addElement(medico);
         }
 
-        JList<model.Medico> lista = new JList<>(suggerimentiModel);
-        lista.setCellRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof model.Medico) {
-                    setText(descriviMedico((model.Medico) value));
-                }
-                return this;
-            }
-        });
+        JList<MedicoSostitutoView> lista = new JList<>(suggerimentiModel);
         lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         lista.setSelectedIndex(0);
         lista.setVisibleRowCount(Math.min(8, suggerimentiModel.size()));
@@ -158,7 +147,7 @@ public class Amministratore {
         );
 
         if (option == JOptionPane.OK_OPTION) {
-            model.Medico selezionato = lista.getSelectedValue();
+            MedicoSostitutoView selezionato = lista.getSelectedValue();
             if (selezionato != null) {
                 String matricolaSostituto = selezionato.getMatricolaMedico();
                 boolean successo = controller.effettuaSostituzione(idMalattia.trim(), matricolaSostituto);
@@ -239,13 +228,13 @@ public class Amministratore {
 
         try {
             LocalDate giorno = LocalDate.parse(data, DATE_FORMATTER);
-            List<Ricovero> ricoveri = controller.dimissioniInData(giorno);
+            List<Controller.RicoveroView> ricoveri = controller.dimissioniInDataView(giorno);
 
             if (ricoveri.isEmpty()) {
                 dimissioniListModel.addElement("Nessuna dimissione prevista per la data indicata.");
             } else {
-                for (Ricovero ricovero : ricoveri) {
-                    dimissioniListModel.addElement(descriviRicovero(ricovero));
+                for (Controller.RicoveroView ricovero : ricoveri) {
+                    dimissioniListModel.addElement(ricovero.toString());
                 }
             }
             aggiornaStato("Ricerca dimissioni completata per " + data + ".");
@@ -277,20 +266,6 @@ public class Amministratore {
         }
 
         login.showLogin(controller);
-    }
-
-    
-
-    private String descriviRicovero(Ricovero ricovero) {
-        String codice = ricovero.getCodiceRicovero();
-        Paziente paziente = ricovero.getPazienteAssegnato();
-        String matricolaPaziente = paziente != null ? paziente.getMatricolaPaziente() : "?";
-        return "Ricovero " + codice + " - paziente " + matricolaPaziente;
-    }
-
-    private String descriviMedico(model.Medico medico) {
-        String reparto = medico.getReparto() != null ? medico.getReparto().getNomeReparto() : "?";
-        return medico.getMatricolaMedico() + " - " + medico.getLogin() + " - reparto " + reparto;
     }
 
     private String leggi(JTextField field) {

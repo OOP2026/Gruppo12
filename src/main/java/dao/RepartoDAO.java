@@ -1,17 +1,16 @@
 package dao;
 
-import model.Reparto;
-
 import java.util.List;
+import java.util.Map;
 
 public interface RepartoDAO {
-	void insertReparto(Reparto reparto);
+	void insertReparto(Map<String, Object> reparto);
 
-	Reparto getRepartoById(String nomeReparto);
+	Map<String, Object> getRepartoById(String nomeReparto);
 
-	List<Reparto> getAllReparti();
+	List<Map<String, Object>> getAllReparti();
 
-	void updateReparto(String vecchioNome, Reparto nuovoReparto);
+	void updateReparto(String vecchioNome, Map<String, Object> nuovoReparto);
 
 	void deleteReparto(String nomeReparto);
 }

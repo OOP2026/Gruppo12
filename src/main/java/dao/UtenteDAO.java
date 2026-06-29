@@ -1,18 +1,16 @@
 package dao;
 
-import model.Utente;
-
 import java.util.List;
+import java.util.Map;
 
 public interface UtenteDAO {
-	void insertUtente(Utente utente);
+	void insertUtente(Map<String, Object> utente);
 
-	Utente getUtenteById(String login);
+	Map<String, Object> getUtenteById(String login);
 
-	List<Utente> getAllUtenti();
+	List<Map<String, Object>> getAllUtenti();
 
-	void updateUtente(Utente utente);
+	void updateUtente(Map<String, Object> utente);
 
 	void deleteUtente(String login);
-
 }

@@ -44,5 +44,10 @@ public class Malattia {
     public void setDataFine(LocalDateTime dataFine) {
         this.dataFine = dataFine;
     }
-}
 
+    @Override
+    public String toString() {
+        String matricolaMedico = medicoAssegnato != null ? medicoAssegnato.getMatricolaMedico() : "?";
+        return "Malattia " + idMalattia + " - medico " + matricolaMedico;
+    }
+}

@@ -1,7 +1,6 @@
 package gui;
 
 import controller.Controller;
-import model.Letto;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -13,8 +12,8 @@ public class GestioneLetto {
     private final Controller controller;
     private final JPanel rootPanel;
     private final JTextField repartoField;
-    private final DefaultListModel<Letto> lettoListModel;
-    private final JList<Letto> lettoList;
+    private final DefaultListModel<Controller.LettoView> lettoListModel;
+    private final JList<Controller.LettoView> lettoList;
     private final JLabel countLabel;
     private final JLabel statusLabel;
 
@@ -115,20 +114,19 @@ public class GestioneLetto {
 
         lettoList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         lettoList.setVisibleRowCount(10);
-        lettoList.setCellRenderer(new ListCellRenderer<Letto>() {
+        lettoList.setCellRenderer(new ListCellRenderer<Controller.LettoView>() {
             private final DefaultListCellRenderer delegate = new DefaultListCellRenderer();
 
             @Override
-            public Component getListCellRendererComponent(JList<? extends Letto> list, Letto value, int index, boolean isSelected, boolean cellHasFocus) {
+            public Component getListCellRendererComponent(JList<? extends Controller.LettoView> list, Controller.LettoView value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel label = (JLabel) delegate.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value == null) {
                     label.setText("");
                     return label;
                 }
 
-                boolean occupato = controller.lettoOccupato(value.getMatricolaLetto());
-                String stanza = value.getStanza() != null ? String.valueOf(value.getStanza().getNumeroStanza()) : "?";
-                label.setText("Letto: " + value.getMatricolaLetto() + " - stanza " + stanza);
+                boolean occupato = value.isOccupato();
+                label.setText(value.toString());
 
                 if (!isSelected) {
                     label.setForeground(occupato ? new Color(180, 0, 0) : new Color(0, 110, 60));
@@ -177,17 +175,17 @@ public class GestioneLetto {
             return;
         }
 
-        List<Letto> letti = controller.cercaLettiPerReparto(nomeReparto);
-        for (Letto letto : letti) {
+        List<Controller.LettoView> letti = controller.cercaLettiPerRepartoView(nomeReparto);
+        for (Controller.LettoView letto : letti) {
             lettoListModel.addElement(letto);
         }
 
-        List<Letto> disponibili = controller.cercaLettiDisponibili(nomeReparto);
-        countLabel.setText(disponibili.size() + " letti disponibili su " + letti.size());
+        int disponibili = (int) letti.stream().filter(letto -> !letto.isOccupato()).count();
+        countLabel.setText(disponibili + " letti disponibili su " + letti.size());
 
         if (letti.isEmpty()) {
             statusLabel.setText("Nessun letto trovato per il reparto indicato.");
-        } else if (disponibili.isEmpty()) {
+        } else if (disponibili == 0) {
             statusLabel.setText("Tutti i letti del reparto risultano occupati.");
         } else {
             statusLabel.setText("Aggiornamento automatico attivo.");

@@ -1,17 +1,16 @@
 package dao;
 
-import model.Stanza;
-
 import java.util.List;
+import java.util.Map;
 
 public interface StanzaDAO {
-	void insertStanza(Stanza stanza);
+	void insertStanza(Map<String, Object> stanza);
 
-	Stanza getStanzaById(int numeroStanza);
+	Map<String, Object> getStanzaById(int numeroStanza);
 
-	List<Stanza> getAllStanze();
+	List<Map<String, Object>> getAllStanze();
 
-	void updateStanza(Stanza stanza);
+	void updateStanza(Map<String, Object> stanza);
 
 	void deleteStanza(int numeroStanza);
 }

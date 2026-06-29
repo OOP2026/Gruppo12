@@ -17,4 +17,9 @@ public class Visita extends Prestazione {
     public void setTipoVisita(String tipoVisita) {
         this.tipoVisita = tipoVisita;
     }
+
+    @Override
+    protected String descrizioneTipo() {
+        return "Visita " + tipoVisita;
+    }
 }
