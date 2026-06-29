@@ -2,6 +2,7 @@ package project.unit;
 
 import controller.Controller;
 import model.*;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -10,6 +11,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+@Ignore("Ignorato su GitHub perché manca la connessione al DB PostgreSQL")
 public class ControllerTest {
 
     @Test
