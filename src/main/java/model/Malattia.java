@@ -2,6 +2,10 @@ package model;
 
 import java.time.LocalDateTime;
 
+/**
+ * Rappresenta una malattia assegnata a un medico.
+ * Registra il periodo di validita e l'amministratore che l'ha inserita.
+ */
 public class Malattia {
     private String idMalattia;
     private LocalDateTime dataInizio;

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/** Adapter PostgreSQL per le visite, basato sul DAO delle prestazioni. */
 public class VisitaPostgresDao extends AbstractPostgresDao implements VisitaDAO {
 
 	@Override

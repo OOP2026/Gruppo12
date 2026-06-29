@@ -3,6 +3,10 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Rappresenta una stanza del reparto.
+ * Contiene i letti assegnati e il riferimento al reparto di appartenenza.
+ */
 public class Stanza {
     private Integer numeroStanza;
     private Reparto reparto;

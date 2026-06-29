@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/** Implementazione PostgreSQL del DAO utente. */
 public class UtentePostgresDao extends AbstractPostgresDao implements UtenteDAO {
 
     private static final String TABLE_UTENTE = "utente";

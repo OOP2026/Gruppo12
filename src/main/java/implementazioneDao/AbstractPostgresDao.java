@@ -7,6 +7,10 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+/**
+ * Base comune per i DAO PostgreSQL.
+ * Offre accesso alla connessione e conversioni tra tempi SQL e Java.
+ */
 abstract class AbstractPostgresDao {
     protected Connection getConnection() {
         try {

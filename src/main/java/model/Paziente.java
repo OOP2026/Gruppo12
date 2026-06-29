@@ -2,6 +2,10 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Rappresenta un paziente ricoverabile.
+ * Conserva i dati anagrafici e l'elenco dei ricoveri associati.
+ */
 public class Paziente {
     private String matricolaPaziente;
     private String nome;

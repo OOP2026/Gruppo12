@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/** Implementazione PostgreSQL del DAO paziente. */
 public class PazientePostgresDao extends AbstractPostgresDao implements PazienteDAO {
 
 	private static final String TABLE_PAZIENTE = "paziente";

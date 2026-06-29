@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/** Implementazione PostgreSQL del DAO reparto. */
 public class RepartoPostgresDao extends AbstractPostgresDao implements RepartoDAO {
 
 	private static final String TABLE_REPARTO = "reparto";

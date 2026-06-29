@@ -3,6 +3,7 @@ package dao;
 import java.util.List;
 import java.util.Map;
 
+/** Operazioni CRUD sugli interventi, viste come specializzazione delle prestazioni. */
 public interface InterventoDAO {
 	void insertIntervento(Map<String, Object> intervento);
 

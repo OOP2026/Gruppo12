@@ -3,6 +3,7 @@ package dao;
 import java.util.List;
 import java.util.Map;
 
+/** Operazioni CRUD sulle visite, viste come specializzazione delle prestazioni. */
 public interface VisitaDAO {
 	void insertVisita(Map<String, Object> visita);
 

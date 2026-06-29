@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/** Implementazione PostgreSQL del DAO malattia. */
 public class MalattiaPostgresDao extends AbstractPostgresDao implements MalattiaDAO {
 
 	private static final String TABLE_MALATTIA = "malattia";

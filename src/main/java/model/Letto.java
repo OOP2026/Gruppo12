@@ -3,6 +3,10 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Rappresenta un letto ospedaliero.
+ * Tiene traccia della stanza di appartenenza e dei ricoveri collegati.
+ */
 public class Letto {
     private String matricolaLetto;
     private Stanza stanza;

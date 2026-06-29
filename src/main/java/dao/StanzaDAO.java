@@ -3,6 +3,7 @@ package dao;
 import java.util.List;
 import java.util.Map;
 
+/** Operazioni CRUD sulle stanze persistite nel database. */
 public interface StanzaDAO {
 	void insertStanza(Map<String, Object> stanza);
 

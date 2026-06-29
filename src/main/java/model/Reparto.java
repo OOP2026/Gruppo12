@@ -3,6 +3,10 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Rappresenta un reparto ospedaliero.
+ * Raggruppa medici e stanze appartenenti alla stessa area clinica.
+ */
 public class Reparto {
     private String nomeReparto;
     private List<Medico> medici;

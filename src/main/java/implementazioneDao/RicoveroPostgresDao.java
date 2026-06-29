@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/** Implementazione PostgreSQL del DAO ricovero. */
 public class RicoveroPostgresDao extends AbstractPostgresDao implements RicoveroDAO {
 
 	private static final String TABLE_RICOVERO = "ricovero";

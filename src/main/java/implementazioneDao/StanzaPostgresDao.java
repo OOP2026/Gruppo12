@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/** Implementazione PostgreSQL del DAO stanza. */
 public class StanzaPostgresDao extends AbstractPostgresDao implements StanzaDAO {
 
 	private static final String TABLE_STANZA = "stanza";

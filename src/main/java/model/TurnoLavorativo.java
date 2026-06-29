@@ -4,6 +4,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Rappresenta un turno lavorativo dei medici.
+ * Memorizza l'intervallo temporale e i medici assegnati al turno.
+ */
 public class TurnoLavorativo {
     private String idTurno;
     private LocalDateTime inizioTurno;
@@ -56,4 +60,3 @@ public class TurnoLavorativo {
         return medici;
     }
 }
-

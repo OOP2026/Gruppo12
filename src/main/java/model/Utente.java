@@ -1,7 +1,9 @@
 package model;
 
-
-
+/**
+ * Modello base di un utente autenticabile del sistema.
+ * Conserva credenziali e comportamento comune alle specializzazioni.
+ */
 public class Utente {
     private String login;
     private String password;

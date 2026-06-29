@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/** Implementazione PostgreSQL del DAO letto. */
 public class LettoPostgresDao extends AbstractPostgresDao implements LettoDAO {
 
 	private static final String TABLE_LETTO = "letto";

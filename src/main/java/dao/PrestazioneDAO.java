@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+/** Operazioni CRUD sulle prestazioni persistite nel database. */
 public interface PrestazioneDAO {
 	void insertPrestazione(Map<String, Object> prestazione);
 

@@ -3,6 +3,7 @@ package dao;
 import java.util.List;
 import java.util.Map;
 
+/** Operazioni CRUD sui turni lavorativi persistiti nel database. */
 public interface TurnoLavorativoDAO {
 	void insertTurnoLavorativo(Map<String, Object> turnoLavorativo);
 

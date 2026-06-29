@@ -3,6 +3,7 @@ package dao;
 import java.util.List;
 import java.util.Map;
 
+/** Operazioni CRUD sugli amministratori persistiti nel database. */
 public interface AmministratoreDAO {
 	void insertAmministratore(Map<String, Object> amministratore);
 

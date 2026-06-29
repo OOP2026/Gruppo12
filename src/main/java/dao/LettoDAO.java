@@ -3,6 +3,7 @@ package dao;
 import java.util.List;
 import java.util.Map;
 
+/** Operazioni CRUD sui letti persistiti nel database. */
 public interface LettoDAO {
 	void insertLetto(Map<String, Object> letto);
 

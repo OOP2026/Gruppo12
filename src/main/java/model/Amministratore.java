@@ -3,6 +3,10 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Rappresenta un amministratore del sistema.
+ * Gestisce i collegamenti con ricoveri e malattie assegnate.
+ */
 public class Amministratore extends Utente {
     private String matricolaAmministratore;
     private List<Ricovero> listaRicoveri;

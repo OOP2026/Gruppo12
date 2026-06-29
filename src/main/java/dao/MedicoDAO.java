@@ -3,6 +3,7 @@ package dao;
 import java.util.List;
 import java.util.Map;
 
+/** Operazioni CRUD sui medici persistiti nel database. */
 public interface MedicoDAO {
 	void insertMedico(Map<String, Object> medico);
 

@@ -8,6 +8,10 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * Vista di supporto per cercare i letti di un reparto.
+ * Evidenzia in modo immediato quali letti risultano occupati o disponibili.
+ */
 public class GestioneLetto {
     private final Controller controller;
     private final JPanel rootPanel;

@@ -14,6 +14,10 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Dashboard dell'amministratore.
+ * Espone le operazioni principali su pazienti, ricoveri, dimissioni e sostituzioni.
+ */
 public class Amministratore {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 

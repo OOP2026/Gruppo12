@@ -2,6 +2,10 @@ package model;
 
 import java.time.LocalDateTime;
 
+/**
+ * Prestazione di tipo intervento chirurgico.
+ * Memorizza la sala operatoria usata durante l'esecuzione.
+ */
 public class Intervento extends Prestazione {
     private Integer salaOperatoria;
 
@@ -24,4 +28,3 @@ public class Intervento extends Prestazione {
         return "Intervento sala " + salaOperatoria;
     }
 }
-

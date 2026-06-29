@@ -5,6 +5,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Modello base per le prestazioni sanitarie.
+ * Gestisce dati comuni, relazione con i medici e formattazione testuale.
+ */
 public abstract class Prestazione {
     private static final DateTimeFormatter DISPLAY_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 

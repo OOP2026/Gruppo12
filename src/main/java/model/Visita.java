@@ -2,6 +2,10 @@ package model;
 
 import java.time.LocalDateTime;
 
+/**
+ * Prestazione di tipo visita.
+ * Aggiunge la specifica categoria clinica alla base comune.
+ */
 public class Visita extends Prestazione {
     private String tipoVisita;
 

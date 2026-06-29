@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.Assert.*;
-
 @Ignore("Ignorato su GitHub perché manca la connessione al DB PostgreSQL")
 public class ControllerTest {
 

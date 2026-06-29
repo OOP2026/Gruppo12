@@ -32,16 +32,18 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Gestisce i dati dell'app e le regole di business.
- * Carica lo stato dal database e fornisce i metodi usati dalle viste.
+ * Coordina l'accesso ai dati, le regole di business e i servizi usati dalle viste.
+ * Carica lo stato dal database e offre operazioni pronte per le schermate Swing.
  */
 public class Controller {
+    /** Ruoli riconosciuti dall'applicazione per scegliere la vista corretta. */
     public enum RuoloUtente {
         AMMINISTRATORE,
         MEDICO,
         ALTRO
     }
 
+    /** Vista testuale compatta per i medici suggeriti come sostituti. */
     public static final class MedicoSostitutoView {
         private final String matricolaMedico;
         private final String login;
@@ -64,6 +66,7 @@ public class Controller {
         }
     }
 
+    /** Vista testuale di un letto con il numero di stanza e lo stato di occupazione. */
     public static final class LettoView {
         private final String matricolaLetto;
         private final Integer numeroStanza;
@@ -90,6 +93,7 @@ public class Controller {
         }
     }
 
+    /** Vista testuale sintetica per le prestazioni mostrate in agenda. */
     public static final class PrestazioneView {
         private final String descrizione;
 
@@ -103,6 +107,7 @@ public class Controller {
         }
     }
 
+    /** Vista testuale sintetica per i ricoveri mostrati nelle liste. */
     public static final class RicoveroView {
         private final String descrizione;
 

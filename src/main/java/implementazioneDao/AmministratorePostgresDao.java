@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/** Implementazione PostgreSQL del DAO amministratore. */
 public class AmministratorePostgresDao extends AbstractPostgresDao implements AmministratoreDAO {
 
 	private static final String TABLE_UTENTE = "utente";

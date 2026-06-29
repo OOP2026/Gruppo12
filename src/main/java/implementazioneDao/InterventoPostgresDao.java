@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/** Adapter PostgreSQL per gli interventi, basato sul DAO delle prestazioni. */
 public class InterventoPostgresDao extends AbstractPostgresDao implements InterventoDAO {
 
 	@Override

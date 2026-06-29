@@ -3,6 +3,7 @@ package dao;
 import java.util.List;
 import java.util.Map;
 
+/** Operazioni CRUD sugli utenti persistiti nel database. */
 public interface UtenteDAO {
 	void insertUtente(Map<String, Object> utente);
 

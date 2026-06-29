@@ -9,6 +9,10 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.Locale;
 
+/**
+ * Finestra iniziale di accesso al sistema.
+ * Autentica l'utente e apre la dashboard corretta in base al ruolo.
+ */
 public class login {
     private final Controller controller;
     private JPanel panel;

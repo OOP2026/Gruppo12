@@ -4,6 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Singleton responsabile della creazione delle connessioni JDBC verso PostgreSQL.
+ * Legge i parametri da property di sistema, variabili d'ambiente o valori default.
+ */
 public final class ConnessioneDatabase {
 	private static final String DEFAULT_URL = "jdbc:postgresql://localhost:5432/postgres";
 	private static final String DEFAULT_USERNAME = "postgres";

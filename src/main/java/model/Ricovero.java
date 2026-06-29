@@ -4,6 +4,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Rappresenta un ricovero ospedaliero.
+ * Collega paziente, letto, amministratori e prestazioni nel tempo.
+ */
 public class Ricovero {
     private String codiceRicovero;
     private LocalDateTime dataAmmissione;

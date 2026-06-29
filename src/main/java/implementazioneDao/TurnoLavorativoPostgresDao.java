@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/** Implementazione PostgreSQL del DAO turno lavorativo. */
 public class TurnoLavorativoPostgresDao extends AbstractPostgresDao implements TurnoLavorativoDAO {
 
 	private static final String TABLE_TURNO = "turno_lavorativo";

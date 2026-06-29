@@ -3,6 +3,10 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Rappresenta un medico del sistema.
+ * Mantiene reparto, malattie, turni e prestazioni assegnate.
+ */
 public class Medico extends Utente {
     private String matricolaMedico;
     private List<Malattia> listaMalattie;
@@ -96,4 +100,3 @@ public class Medico extends Utente {
         return matricolaMedico + " - " + getLogin() + " - reparto " + repartoNome;
     }
 }
-
