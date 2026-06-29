@@ -360,6 +360,7 @@ public class Controller {
         return prestazione;
     }
 
+    /** Crea l'utente amministratore di default se non presente nel database. */
     private void sincronizzaUtentiPredefinitiSulDatabase() {
         // Inserisce l'admin base solo se manca.
         if (utenteDAO.getUtenteById(DEFAULT_ADMIN) == null) {
@@ -367,6 +368,7 @@ public class Controller {
         }
     }
 
+    /** Carica tutte le entita persistite dal database nelle liste in memoria. */
     private void caricaDatiPersistentiDalDatabase() {
         // Carica prima i dati base e poi le relazioni tra gli oggetti.
         caricaRepartiStanzeELettiDalDatabase();
@@ -694,6 +696,7 @@ public class Controller {
         return true;
     }
 
+    /** Verifica se il letto e libero nei prossimi 7 giorni escludendo ricoveri del paziente stesso. */
     private boolean isLettoValidoPerNuovoRicovero(Letto letto, Paziente pazienteRichiedente) {
         // Controlla se il letto può essere usato senza conflitti.
         LocalDateTime newStart = LocalDateTime.now();
@@ -984,6 +987,7 @@ public class Controller {
         return views;
     }
 
+    /** Restituisce i medici che possono sostituire il collega in malattia alle sue prestazioni programmate. */
     public List<Medico> suggerisciSostituto(String idMalattia) {
         // Cerca i medici adatti a sostituire il medico assente.
         List<Medico> suggeriti = new ArrayList<>();
@@ -1073,6 +1077,7 @@ public class Controller {
         return true;
     }
 
+    /** Sostituisce il medico assente con il sostituto in tutte le prestazioni del periodo di malattia. */
     public boolean effettuaSostituzione(String idMalattia, String matricolaSostituto) {
         // Riassegna la malattia e le prestazioni al sostituto.
         if (idMalattia == null || matricolaSostituto == null) return false;

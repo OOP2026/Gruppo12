@@ -158,7 +158,6 @@ public class Amministratore {
 
                 if (successo) {
                     aggiornaStato("Sostituzione effettuata con il medico: " + matricolaSostituto);
-                    JOptionPane.showMessageDialog(panel, "Sostituzione completata con successo nel database!", "Operazione Riuscita", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     mostraAvviso("Errore durante la sostituzione delle prestazioni.");
                 }
