@@ -58,8 +58,8 @@ jobs:
           fail-on-error: 'false'
 
       - name: Publish Code Coverage Report
-        uses: madrapps/jacoco-report@v1.6
-        if: success() || failure()
+        uses: madrapps/jacoco-report@v1.8.0
+        if: github.event_name == 'pull_request' && (success() || failure())
         with:
           paths: ${{ github.workspace }}/target/site/jacoco/jacoco.xml
           token: ${{ secrets.GITHUB_TOKEN }}
