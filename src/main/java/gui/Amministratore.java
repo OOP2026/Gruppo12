@@ -148,7 +148,7 @@ public class Amministratore {
                 JOptionPane.INFORMATION_MESSAGE
         );
 
-        aggiornaStato("Visualizzati " + suggeriti.size() + " sostituti disponibili per malattia " + idMalattia.trim());
+        aggiornaStato("Visualizzati " + suggeriti.size() + " sostituto/i per medico in malattia - ID: " + idMalattia.trim());
     }
     private void aggiungiPaziente() {
         String matricola = leggi(pazienteMatricolaField);
